@@ -1,0 +1,46 @@
+"use client";
+
+import "@/styles/pages/login.css";
+
+export default function LoginPage() {
+  return (
+    <div className="login-root">
+      {/* Brand Side */}
+      <div className="login-brand">
+        <div className="brand-content">
+          <h1>Bejana Kopi Dunia</h1>
+          <p>
+            Inventory & Production Management System
+            <br />
+            for Coffee Business
+          </p>
+        </div>
+      </div>
+
+      {/* Form Side */}
+      <div className="login-form-wrapper">
+        <div className="login-card">
+          <h2>Login</h2>
+
+          <div className="form-group">
+            <label>Username</label>
+            <input type="text" placeholder="Masukkan username" />
+          </div>
+
+          <div className="form-group">
+            <label>Password</label>
+            <input type="password" placeholder="Masukkan password" />
+          </div>
+
+          <button className="login-button">
+            Masuk ke Sistem
+          </button>
+
+          <div className="login-footer">
+            © Bejana Kopi Dunia
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

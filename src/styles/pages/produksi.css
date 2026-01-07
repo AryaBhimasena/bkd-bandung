@@ -1,0 +1,73 @@
+.produksi-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 16px;
+}
+
+.produksi-section.top {
+  flex: 0 0 20%;
+}
+
+.produksi-section.bottom {
+  flex: 1;
+}
+
+.produksi-card {
+  height: 100%;
+  border: 2px dashed #ccc;
+  border-radius: 12px;
+  padding: 16px;
+  background: #fff;
+}
+
+.section-title {
+  margin-bottom: 12px;
+}
+
+/* ===== PRODUCT HORIZONTAL ===== */
+.produk-horizontal {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+}
+
+.produk-card-mini {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 12px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.produk-title {
+  font-weight: 600;
+}
+
+.produk-subtitle {
+  font-size: 13px;
+  color: #666;
+}
+
+/* ===== RESEP ===== */
+.resep-preview ul {
+  margin-top: 8px;
+}
+
+.resep-preview li {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+}
+
+/* ===== TABLE ===== */
+.produksi-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.produksi-table th,
+.produksi-table td {
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+}

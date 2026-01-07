@@ -1,0 +1,60 @@
+.stock-page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.stock-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.stock-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.stock-actions input,
+.stock-actions select {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.btn-primary {
+  padding: 6px 14px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.stock-table-wrapper {
+  overflow-x: auto;
+}
+
+.stock-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.stock-table th,
+.stock-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+}
+
+.stock-table th {
+  background: #f9fafb;
+  font-weight: 600;
+}
+
+.stock-table .empty {
+  text-align: center;
+  padding: 20px;
+  color: #6b7280;
+}

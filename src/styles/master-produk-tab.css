@@ -1,0 +1,131 @@
+.produk-wrapper {
+  display: flex;
+  gap: 16px;
+}
+
+/* CARD BASE */
+.produk-card {
+  border: 2px dashed #d0d0d0;
+  border-radius: 12px;
+  background: #fff;
+  padding: 16px;
+}
+
+/* LEFT CARD */
+.list-card {
+  width: 35%;
+}
+
+/* RIGHT CARD */
+.resep-card {
+  width: 65%;
+}
+
+/* HEADER */
+.card-header {
+  margin-bottom: 12px;
+}
+
+.card-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* LIST PRODUK */
+.produk-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.produk-item {
+  display: flex;
+  gap: 12px;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+}
+
+.produk-item:hover {
+  background: #f6f6f6;
+}
+
+.produk-item.active {
+  border-color: #2563eb;
+  background: #eef2ff;
+}
+
+/* THUMB */
+.produk-thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #e5e7eb;
+}
+
+.thumb-placeholder {
+  width: 100%;
+  height: 100%;
+  background: #d1d5db;
+}
+
+.produk-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* INFO */
+.produk-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.produk-merek {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.produk-nama {
+  font-size: 12px;
+  color: #555;
+}
+
+/* RESEP */
+.resep-profile {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.resep-header h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.resep-header p {
+  margin: 0;
+  color: #666;
+}
+
+.resep-section h4 {
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.resep-section ul {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13px;
+}
+
+.empty {
+  padding: 24px;
+  text-align: center;
+  color: #888;
+}

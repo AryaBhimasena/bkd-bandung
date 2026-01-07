@@ -1,0 +1,118 @@
+/* ======================================================
+   FIFO STOCK MODAL – ISOLATED CSS
+   Semua class diprefix fifo-
+====================================================== */
+
+/* Reset lokal agar tidak terpengaruh global */
+.fifo-modal-backdrop *,
+.fifo-modal-backdrop *::before,
+.fifo-modal-backdrop *::after {
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+/* ======================================================
+   BACKDROP
+====================================================== */
+.fifo-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+/* ======================================================
+   MODAL CARD
+====================================================== */
+.fifo-modal-card {
+  width: 100%;
+  max-width: 480px;
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  overflow: hidden;
+}
+
+/* ======================================================
+   TITLE
+====================================================== */
+.fifo-modal-title {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #222;
+}
+
+/* ======================================================
+   FORM ROW (2 kolom sejajar)
+====================================================== */
+.fifo-form-row {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+/* ======================================================
+   INPUT & SELECT (FULL CONTROL)
+====================================================== */
+.fifo-modal-card input,
+.fifo-modal-card select {
+  width: 100%;
+  height: 38px;
+  padding: 0 10px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  outline: none;
+  background: #fff;
+}
+
+/* Fokus */
+.fifo-modal-card input:focus,
+.fifo-modal-card select:focus {
+  border-color: #2563eb;
+}
+
+/* Khusus row 2 kolom */
+.fifo-form-row > input,
+.fifo-form-row > select {
+  flex: 1;
+}
+
+/* ======================================================
+   ACTIONS
+====================================================== */
+.fifo-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* ======================================================
+   BUTTONS
+====================================================== */
+.fifo-modal-actions button {
+  height: 36px;
+  padding: 0 16px;
+  font-size: 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  border: none;
+}
+
+.fifo-modal-actions button[type="button"] {
+  background: #e5e7eb;
+  color: #111;
+}
+
+.fifo-btn-primary {
+  background: #2563eb;
+  color: #fff;
+}

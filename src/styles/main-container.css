@@ -1,0 +1,69 @@
+/* ======================================================
+   MAIN WRAPPER
+====================================================== */
+.main-wrapper {
+  flex: 1;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  padding: 24px 0;
+
+  /* jangan bunuh scroll browser */
+  overflow: visible;
+}
+
+/* ======================================================
+   MAIN CARD (WORK AREA)
+====================================================== */
+.main-card {
+  width: 85%;
+
+  /* biarkan tinggi mengikuti konten */
+  height: auto;
+  min-height: calc(100vh - 56px - 48px);
+
+  background: #ffffff;
+  border-radius: 20px;
+
+  padding: 24px 28px;
+
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.04);
+
+  /* tidak ada scrollbar di component */
+  overflow: visible;
+}
+
+/* ======================================================
+   PAGE TITLE
+====================================================== */
+.page-title {
+  margin: 0 0 20px 0;
+
+  font-size: 18px;
+  font-weight: 600;
+  color: #2e2e2e;
+}
+
+/* ======================================================
+   RESPONSIVE
+====================================================== */
+@media (max-width: 1024px) {
+  .main-card {
+    width: calc(100% - 32px);
+    min-height: calc(100vh - 56px - 32px);
+  }
+}
+
+@media (max-width: 640px) {
+  .main-card {
+    padding: 18px;
+    border-radius: 16px;
+  }
+
+  .page-title {
+    font-size: 16px;
+  }
+}
