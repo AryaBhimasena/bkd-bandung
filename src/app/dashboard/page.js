@@ -2,14 +2,161 @@
 
 import MainContainer from "@/components/layout/MainContainer";
 import "@/styles/pages/dashboard.css";
+import { useEffect, useState } from "react";
+import {
+  fetchMasterStock,
+  fetchStockFIFO,
+  fetchProduksi,
+} from "@/lib/masterProdukHelper";
+
 
 export default function DashboardPage() {
-  const bahanUtama = [
-    { nama: "Greenbean Arabica", qty: 100, nilai: 1200000 },
-    { nama: "Greenbean Robusta", qty: 80, nilai: 960000 },
-    { nama: "Roastbean Arabica", qty: 50, nilai: 600000 },
-    { nama: "Roastbean Robusta", qty: 40, nilai: 480000 },
-  ];
+	const [bahanRoast, setBahanRoast] = useState([]);
+	const [bahanGreen, setBahanGreen] = useState([]);
+	const [produksiTerakhir, setProduksiTerakhir] = useState([]);
+	const [loading, setLoading] = useState(false);
+	
+	const [stockMenipis, setStockMenipis] = useState([]);
+	const [pageStock, setPageStock] = useState(0);
+	const PAGE_SIZE = 5;
+	
+	const [topProduksiBulanan, setTopProduksiBulanan] = useState([]);
+	
+	function formatTanggalID(value) {
+	  if (!value) return "";
+	  const d = new Date(value);
+	  if (isNaN(d)) return "";
+	  return `${String(d.getDate()).padStart(2,"0")}-${String(d.getMonth()+1).padStart(2,"0")}-${d.getFullYear()}`;
+	}
+	
+	function isSameMonth(dateValue) {
+	  const d = new Date(dateValue);
+	  const now = new Date();
+
+	  return (
+		d.getMonth() === now.getMonth() &&
+		d.getFullYear() === now.getFullYear()
+	  );
+	}
+
+	async function loadDashboard() {
+	  setLoading(true);
+
+	  const [stockRes, fifoRes, produksiRes] = await Promise.all([
+		fetchMasterStock(),
+		fetchStockFIFO(),
+		fetchProduksi(),
+	  ]);
+
+	  if (!stockRes?.success || !fifoRes?.success) {
+		setLoading(false);
+		return;
+	  }
+
+	  const masterStock = stockRes.data || [];
+	  const fifo = fifoRes.data || [];
+
+	  const sisaStockMap = hitungSisaStock(fifo);
+
+	  const roast = [];
+	  const green = [];
+
+	  masterStock.forEach(stock => {
+		const id = stock.ID_Stock;
+		if (!id) return;
+
+		const item = {
+		  id,
+		  nama: stock.Item,
+		  qty: sisaStockMap[id] || 0,
+		  satuan: stock.Satuan_Qty,
+		};
+
+		if (id.startsWith("BBR")) roast.push(item);
+		if (id.startsWith("BBG")) green.push(item);
+	  });
+
+	  setBahanRoast(roast);
+	  setBahanGreen(green);
+	  
+			const stockLainnya = [];
+
+			masterStock.forEach(stock => {
+			  const id = stock.ID_Stock;
+			  if (!id) return;
+
+			  // EXCLUDE bahan baku utama
+			  if (id.startsWith("BBR") || id.startsWith("BBG")) return;
+
+			  const qty = sisaStockMap[id] || 0;
+
+			  stockLainnya.push({
+				id,
+				nama: stock.Item,
+				qty,
+				satuan: stock.Satuan_Qty,
+			  });
+			});
+
+		const menipis = stockLainnya
+		  .filter(s => s.qty <= 20)
+		  .map(s => ({
+			...s,
+			status: s.qty === 0 ? "Habis" : "Hampir Habis",
+		  }))
+		  .sort((a, b) => a.qty - b.qty); // dari paling habis
+
+		setStockMenipis(menipis);
+		
+		function hitungSisaStock(fifoData) {
+		  const map = {};
+
+		  fifoData.forEach(row => {
+			const id = row.ID_Stock;
+			const sisa = Number(row.Sisa_Stock) || 0;
+			map[id] = (map[id] || 0) + sisa;
+		  });
+
+		  return map;
+		}
+
+		if (produksiRes?.success) {
+		  const produksi = produksiRes.data || [];
+
+		  // filter bulan ini (dan optional hanya Posted)
+		  const bulanIni = produksi.filter(p =>
+			isSameMonth(p.Tanggal)
+			// && p.Status_Produksi === "Posted"
+		  );
+
+		  const map = {};
+
+		  bulanIni.forEach(p => {
+			const key = `${p.Merek} - ${p.Produk}`;
+			const qty = Number(p.Qty_Produksi) || 0;
+
+			map[key] = (map[key] || 0) + qty;
+		  });
+
+		  const top5 = Object.entries(map)
+			.map(([produk, qty]) => ({ produk, qty }))
+			.sort((a, b) => b.qty - a.qty)
+			.slice(0, 5);
+
+		  setTopProduksiBulanan(top5);
+
+		  // tetap simpan produksi terakhir
+		  setProduksiTerakhir(
+			produksi.slice(-5).reverse()
+		  );
+		}
+
+	  setLoading(false);
+	}
+
+	useEffect(() => {
+	  loadDashboard();
+	}, []);
 
   // Untuk section kanan
   const bahanHabis = [
@@ -21,14 +168,6 @@ export default function DashboardPage() {
     { jenis: "Label" },
     { jenis: "Kemasan" },
     { jenis: "Packaging" },
-  ];
-
-  const produksiTerakhir = [
-    { id: "PRD-001", tanggal: "05-01-2026", produk: "Arabica Gayo 200gr", qty: 50, status: "Draft" },
-    { id: "PRD-002", tanggal: "04-01-2026", produk: "Toraja 200gr", qty: 40, status: "Posted" },
-    { id: "PRD-003", tanggal: "03-01-2026", produk: "Robusta 200gr", qty: 30, status: "Posted" },
-    { id: "PRD-004", tanggal: "02-01-2026", produk: "Arabica 500gr", qty: 20, status: "Draft" },
-    { id: "PRD-005", tanggal: "01-01-2026", produk: "Toraja 500gr", qty: 25, status: "Posted" },
   ];
 
   return (
@@ -46,52 +185,138 @@ export default function DashboardPage() {
           
           {/* LEFT */}
           <div className="dashboard-left">
-            <div className="card bahan-utama-card">
-              <h3>List Bahan Baku Kopi Utama</h3>
-              <table className="bahan-table">
-                <thead>
-                  <tr>
-                    <th>No</th>
-                    <th>Nama Bahan</th>
-                    <th>Qty</th>
-                    <th>Total</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {bahanUtama.map((b, idx) => (
-                    <tr key={b.nama}>
-                      <td>{idx + 1}</td>
-                      <td>{b.nama}</td>
-                      <td>{b.qty}</td>
-                      <td>Rp {b.nilai.toLocaleString()}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+			<div className="card bahan-utama-card stock-insight-card">
+
+			  <div className="stock-insight-grid">
+
+				{/* INSIGHT 1 — 40% */}
+				<div className="stock-availability">
+				  <h4>Ketersediaan Bahan Baku</h4>
+
+				  <table className="bahan-table">
+					<thead>
+					  <tr>
+						<th>Item</th>
+						<th>Qty</th>
+					  </tr>
+					</thead>
+					<tbody>
+					  {bahanRoast.map(b => (
+						<tr key={b.id}>
+						  <td>{b.nama}</td>
+						  <td
+							  className={b.qty === 0 ? "qty-zero" : "qty-available"}
+							>
+							  {b.qty} {b.satuan}
+							</td>
+						</tr>
+					  ))}
+					  {bahanGreen.map(b => (
+						<tr key={b.id}>
+						  <td>{b.nama}</td>
+							<td
+							  className={b.qty === 0 ? "qty-zero" : "qty-available"}
+							>
+							  {b.qty} {b.satuan}
+							</td>
+						</tr>
+					  ))}
+					</tbody>
+				  </table>
+				</div>
+
+				{/* INSIGHT 2 — 60% */}
+				<div className="stock-critical">
+				  <h4>Stock Menipis / Habis</h4>
+
+				  <table className="bahan-table">
+					<thead>
+					  <tr>
+						<th>No</th>
+						<th>Item Stock</th>
+						<th>Qty</th>
+						<th>Status</th>
+					  </tr>
+					</thead>
+					<tbody>
+					  {stockMenipis
+						.slice(pageStock * PAGE_SIZE, (pageStock + 1) * PAGE_SIZE)
+						.map((s, i) => (
+						  <tr key={s.id}>
+							<td>{pageStock * PAGE_SIZE + i + 1}</td>
+							<td>{s.nama}</td>
+							<td
+							  className={s.qty === 0 ? "qty-zero" : "qty-available"}
+							>
+							  {s.qty} {s.satuan}
+							</td>
+							<td>
+							  <span
+								className={`stock-status ${
+								  s.status === "Habis" ? "habis" : "menipis"
+								}`}
+							  >
+								{s.status}
+							  </span>
+							</td>
+						  </tr>
+						))}
+					</tbody>
+				  </table>
+
+				  {/* PAGINATION */}
+				  {stockMenipis.length > PAGE_SIZE && (
+					<div className="pagination">
+					  <button
+						disabled={pageStock === 0}
+						onClick={() => setPageStock(p => p - 1)}
+					  >
+						Prev
+					  </button>
+					  <button
+						disabled={(pageStock + 1) * PAGE_SIZE >= stockMenipis.length}
+						onClick={() => setPageStock(p => p + 1)}
+					  >
+						Next
+					  </button>
+					</div>
+				  )}
+				</div>
+
+			  </div>
+			</div>
           </div>
 
           {/* RIGHT */}
           <div className="dashboard-right">
-            <div className="card bahan-status-card">
-              
-              <h4>Bahan Habis</h4>
-              <ul>
-                {bahanHabis.map((b, idx) => (
-                  <li key={idx}>
-                    {idx + 1}. {b.jenis} - {b.namaProduk} ({b.tanggalTerakhir})
-                  </li>
-                ))}
-              </ul>
+			<div className="card bahan-status-card">
+			  <h4>Top Produksi Bulan Ini</h4>
 
-              <h4>Mendekati Re-Order Point</h4>
-              <ul>
-                {bahanROPs.map((b, idx) => (
-                  <li key={idx}>{idx + 1}. {b.jenis}</li>
-                ))}
-              </ul>
-
-            </div>
+			  {topProduksiBulanan.length === 0 ? (
+				<p style={{ fontSize: 13, textAlign: "center", color: "#6b7280" }}>
+				  Belum ada produksi bulan ini
+				</p>
+			  ) : (
+				<table className="bahan-table">
+				  <thead>
+					<tr>
+					  <th>No</th>
+					  <th>Produk</th>
+					  <th>Qty</th>
+					</tr>
+				  </thead>
+				  <tbody>
+					{topProduksiBulanan.map((p, i) => (
+					  <tr key={p.produk}>
+						<td>{i + 1}</td>
+						<td style={{ textAlign: "left" }}>{p.produk}</td>
+						<td>{p.qty}</td>
+					  </tr>
+					))}
+				  </tbody>
+				</table>
+			  )}
+			</div>
           </div>
         </div>
 
@@ -108,19 +333,21 @@ export default function DashboardPage() {
                 <th>Status</th>
               </tr>
             </thead>
-            <tbody>
-              {produksiTerakhir.map(p => (
-                <tr key={p.id}>
-                  <td>{p.id}</td>
-                  <td>{p.tanggal}</td>
-                  <td>{p.produk}</td>
-                  <td>{p.qty}</td>
-                  <td>
-                    <span className={`status ${p.status === "Posted" ? "posted" : "draft"}`}>{p.status}</span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+				<tbody>
+				  {produksiTerakhir.map(p => (
+					<tr key={p.ID_Produksi}>
+					  <td>{p.ID_Produksi}</td>
+					  <td>{formatTanggalID(p.Tanggal)}</td>
+					  <td>{p.Merek} - {p.Produk}</td>
+					  <td>{p.Qty_Produksi}</td>
+					  <td>
+						<span className={`status ${p.Status === "Posted" ? "posted" : "draft"}`}>
+						  {p.Status_Produksi}
+						</span>
+					  </td>
+					</tr>
+				  ))}
+				</tbody>
           </table>
         </div>
 

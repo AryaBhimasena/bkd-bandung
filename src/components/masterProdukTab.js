@@ -17,8 +17,7 @@ export default function MasterProdukTab({
 
     const stillExists = data.some(
       p =>
-        p.Merek === selectedProduk.Merek &&
-        p.Produk === selectedProduk.Produk
+        p.ID_Produk === selectedProduk.ID_Produk
     );
 
     if (!stillExists) {
@@ -46,12 +45,11 @@ export default function MasterProdukTab({
 
           {data.map(item => {
             const isActive =
-              selectedProduk?.Merek === item.Merek &&
-              selectedProduk?.Produk === item.Produk;
+              selectedProduk?.ID_Produk === item.ID_Produk;
 
             return (
               <div
-                key={`${item.Merek}-${item.Produk}`}
+                key={item.ID_Produk}
                 className={`produk-item ${isActive ? "active" : ""}`}
                 onClick={() => handleSelect(item)}
               >

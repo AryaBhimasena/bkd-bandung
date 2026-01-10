@@ -31,12 +31,19 @@
 .dashboard-top-section {
   display: flex;
   gap: 20px;
-  align-items: stretch; /* bikin kiri-kanan sama tinggi */
 }
 
 /* ---------- LEFT ---------- */
 .dashboard-left {
-  flex: 2;
+  flex: 0 0 68%;
+  max-width: 68%;
+}
+
+/* ===== INSIGHT STOCK GRID ===== */
+.stock-insight-grid {
+  display: grid;
+  grid-template-columns: 40% 60%;
+  gap: 16px;
 }
 
 .bahan-utama-card {
@@ -46,13 +53,67 @@
   box-shadow: 0 8px 20px rgba(0,0,0,0.06);
   display: flex;
   flex-direction: column;
-  height: 85%; /* memastikan sama tinggi dengan kanan */
 }
 
 .bahan-utama-card h3 {
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 12px;
+}
+
+.stock-availability,
+.stock-critical {
+  display: flex;
+  flex-direction: column;
+}
+
+/* garis pemisah vertikal antar insight */
+.stock-critical {
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid #e5e7eb; /* sama dengan bottom line tabel */
+  padding-left: 16px; /* jarak dari garis */
+  padding-right : 8px;
+}
+
+.stock-status {
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+  display: inline-block;
+}
+
+.stock-status.menipis {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.stock-status.habis {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.pagination {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.pagination button {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 .bahan-table {
@@ -81,11 +142,23 @@
   background-color: #f9fafb;
 }
 
+/* QTY tersedia */
+.qty-available {
+  font-weight: 600;        /* lebih tebal */
+  color: #111827;          /* teks utama */
+}
+
+/* QTY habis */
+.qty-zero {
+  font-weight: 400;        /* normal */
+  color: #9ca3af;          /* abu-abu soft */
+}
+
 /* ---------- RIGHT ---------- */
 .dashboard-right {
-  flex: 1;
+  flex: 0 0 30%;
+  max-width: 30%;
   display: flex;
-  flex-direction: column;
 }
 
 .bahan-status-card {
@@ -95,8 +168,7 @@
   box-shadow: 0 8px 20px rgba(0,0,0,0.06);
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  height: 100%; /* mengikuti tinggi kiri */
+  justify-content: center;
 }
 
 .bahan-status-card h4 {

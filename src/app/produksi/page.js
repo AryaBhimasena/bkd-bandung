@@ -8,6 +8,7 @@ import ProduksiModal from "@/components/modal/produksiModal";
 
 import {
   fetchMasterProduk,
+  fetchProduksi,
 } from "@/lib/masterProdukHelper";
 
 export default function ProduksiPage() {
@@ -16,6 +17,12 @@ export default function ProduksiPage() {
   ================================= */
   const [masterProdukData, setMasterProdukData] = useState([]);
   const [loadingProduk, setLoadingProduk] = useState(false);
+  
+/* ================================
+   PRODUKSI STATE
+================================= */
+const [produksiData, setProduksiData] = useState([]);
+const [loadingProduksi, setLoadingProduksi] = useState(false);
 
   /* ================================
      UI STATE
@@ -34,13 +41,24 @@ export default function ProduksiPage() {
     }
     setLoadingProduk(false);
   }
+  
+	async function loadProduksi() {
+	  setLoadingProduksi(true);
+	  const res = await fetchProduksi();
+	  if (res?.success) {
+		setProduksiData(res.data || []);
+	  }
+	  setLoadingProduksi(false);
+	}
 
   /* ================================
      EFFECT
   ================================= */
-  useEffect(() => {
-    loadMasterProduk();
-  }, []);
+useEffect(() => {
+  loadMasterProduk();
+  loadProduksi();
+}, []);
+
 
   /* ================================
      HANDLER
@@ -49,6 +67,19 @@ export default function ProduksiPage() {
     setSelectedProduk(item);
     setModalOpen(true);
   };
+
+function formatTanggalID(value) {
+  if (!value) return "";
+
+  const date = new Date(value);
+  if (isNaN(date.getTime())) return "";
+
+  const dd = String(date.getDate()).padStart(2, "0");
+  const mm = String(date.getMonth() + 1).padStart(2, "0");
+  const yyyy = date.getFullYear();
+
+  return `${dd}-${mm}-${yyyy}`;
+}
 
   /* ================================
      RENDER
@@ -76,20 +107,21 @@ export default function ProduksiPage() {
                     </div>
                   )}
 
-                  {masterProdukData.map(item => (
-                    <div
-                      key={`${item.Merek}-${item.Produk}`}
-                      className="produk-card-mini"
-                      onClick={() => handleSelectProduk(item)}
-                    >
-                      <div className="produk-title">
-                        {item.Merek}
-                      </div>
-                      <div className="produk-subtitle">
-                        {item.Produk}
-                      </div>
-                    </div>
-                  ))}
+{masterProdukData.map(item => (
+  <div
+    key={item.ID_Produk}
+    className="produk-card-mini"
+    onClick={() => handleSelectProduk(item)}
+  >
+    <div className="produk-title">
+      {item.Merek}
+    </div>
+    <div className="produk-subtitle">
+      {item.Produk}
+    </div>
+  </div>
+))}
+
                 </div>
 			 </>
             )}
@@ -103,9 +135,39 @@ export default function ProduksiPage() {
               <h3>Riwayat Produksi</h3>
             </div>
 
-            <div className="empty">
-              Belum ada data produksi
-            </div>
+{loadingProduksi ? (
+  <p>Memuat data produksi...</p>
+) : produksiData.length === 0 ? (
+  <div className="empty">
+    Belum ada data produksi
+  </div>
+) : (
+  <table className="produksi-table">
+    <thead>
+      <tr>
+        <th>ID Produksi</th>
+        <th>Tanggal</th>
+        <th>Produk</th>
+        <th>Qty</th>
+        <th>Satuan</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {produksiData.map((row, i) => (
+        <tr key={i}>
+          <td>{row.ID_Produksi}</td>
+          <td>{formatTanggalID(row.Tanggal)}</td>
+          <td>{row.Merek} - {row.Produk}</td>
+          <td>{row.Qty_Produksi}</td>
+          <td>{row.Satuan_Produk}</td>
+          <td>{row.Status_Produksi}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+)}
+
           </div>
         </section>
 

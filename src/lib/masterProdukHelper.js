@@ -15,3 +15,19 @@ export function updateMasterProduk(data) {
 export function deleteMasterProduk({ Merek, Produk }) {
   return apiPost("masterProduk.delete", { Merek, Produk });
 }
+
+export function fetchMasterStock() {
+  return apiPost("masterStock.list");
+}
+
+export function fetchStockFIFO() {
+  return apiPost("stockFIFO.list");
+}
+
+export function fetchProduksi() {
+  return apiPost("produksi.list");
+}
+
+export function createProduksi(data) {
+  return apiPost("produksi.create", data);
+}
