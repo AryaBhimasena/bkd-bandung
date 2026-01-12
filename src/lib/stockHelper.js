@@ -34,6 +34,7 @@ export async function fetchStockFIFO() {
 
       /* JOINED FROM MASTER */
       Stock_Nama: master.Item || "-",
+      Stock_Jenis: master.Jenis || "-",
       Stock_Kategori: master.Kategori_Stock || "-",
 
       Qty: qtyBase.value,
@@ -47,9 +48,29 @@ export async function fetchStockFIFO() {
       Tanggal_Obj: tanggal,
       Tanggal_Display: formatIDDate(tanggal),
     };
+	
   });
 
   return { success: true, data };
+}
+
+/* ================================
+   FIFO – GENERATE ID REF
+================================ */
+export async function generateFifoIdRef() {
+  const res = await apiPost("fifo.generateId");
+
+  if (!res?.success) {
+    return {
+      success: false,
+      message: res?.message || "Gagal generate ID FIFO"
+    };
+  }
+
+  return {
+    success: true,
+    id_ref: res.id_ref
+  };
 }
 
 /* ================================

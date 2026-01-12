@@ -83,6 +83,7 @@ export default function StockPage() {
                   <th>ID Ref</th>
                   <th>Tanggal</th>
                   <th>Nama Stock</th>
+                  <th>Jenis Stock</th>
                   <th>Kategori</th>
                   <th>Qty</th>
                   <th>Satuan</th>
@@ -94,7 +95,7 @@ export default function StockPage() {
               <tbody>
                 {filteredData.length === 0 && (
                   <tr>
-                    <td colSpan={9} className="empty">
+                    <td colSpan={10} className="empty">
                       Tidak ada data
                     </td>
                   </tr>
@@ -105,6 +106,7 @@ export default function StockPage() {
                     <td>{row.ID_Ref}</td>
                     <td>{row.Tanggal_Display}</td>
                     <td>{row.Stock_Nama}</td>
+                    <td>{row.Stock_Jenis}</td>
                     <td>{row.Stock_Kategori}</td>
                     <td>{row.Qty}</td>
                     <td>{row.Satuan_Qty}</td>
