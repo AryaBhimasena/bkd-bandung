@@ -1,0 +1,104 @@
+/* ======================================================
+   LAPORAN LABA RUGI
+   Path: styles/pages/laba-rugi.css
+   Tema: clean, profesional, akuntansi
+====================================================== */
+
+/* ===== WRAPPER ===== */
+.laporan-block {
+  background: #fff;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.laporan-block h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.laporan-block .muted {
+  font-size: 13px;
+  color: #777;
+  margin-bottom: 12px;
+}
+
+/* ===== LIST CONTAINER ===== */
+.laporan-list {
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+}
+
+/* ===== GROUP TITLE ===== */
+.group-title {
+  margin-top: 16px;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* ===== ROW BASE ===== */
+.row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  padding: 6px 0;
+}
+
+/* hover ringan untuk keterbacaan */
+.row:not(.total):not(.subtotal):not(.final):hover {
+  background: #fafafa;
+}
+
+/* ===== INDENT DETAIL AKUN ===== */
+.row.indent {
+  padding-left: 16px;
+  color: #444;
+}
+
+/* ===== NOMINAL (KANAN, MONO) ===== */
+.row span:last-child {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  text-align: right;
+  min-width: 140px; /* kunci alignment */
+}
+
+/* ===== TOTAL PER KELOMPOK ===== */
+.row.total {
+  margin-top: 4px;
+  padding-top: 6px;
+  border-top: 1px solid #e0e0e0;
+  font-weight: 600;
+}
+
+/* ===== SUBTOTAL (LABA KOTOR / LABA USAHA) ===== */
+.row.subtotal {
+  margin-top: 8px;
+  padding: 8px 0;
+  background: #f6f6f6;
+  font-weight: 600;
+}
+
+/* ===== FINAL (LABA BERSIH) ===== */
+.row.final {
+  margin-top: 14px;
+  padding: 10px 0;
+  border-top: 2px solid #333;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .laporan-block {
+    padding: 16px;
+  }
+
+  .row span:last-child {
+    min-width: 120px;
+  }
+}

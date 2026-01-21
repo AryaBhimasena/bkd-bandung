@@ -1,0 +1,117 @@
+/* ======================================================
+   LAPORAN POSISI KEUANGAN (NERACA)
+   Clean – Profesional – Akuntansi
+====================================================== */
+
+/* ===== WRAPPER ===== */
+.laporan-block {
+  background: #fff;
+  padding: 20px 24px;
+}
+
+/* ===== HEADER ===== */
+.laporan-header {
+  margin-bottom: 16px;
+}
+
+.laporan-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.laporan-header .muted {
+  font-size: 13px;
+  color: #777;
+}
+
+/* ===== GRID 2 KOLOM (ASET | LIABILITAS & EKUITAS) ===== */
+.laporan-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 40px;
+  align-items: start;
+}
+
+/* ===== GROUP TITLE ===== */
+.group-title {
+  margin-top: 16px;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* ===== ROW ===== */
+.row {
+  display: grid;
+  grid-template-columns: 1fr 140px;
+  align-items: center;
+  padding: 6px 0;
+  font-size: 14px;
+}
+
+/* Hover ringan */
+.row:not(.total):not(.final):hover {
+  background: #fafafa;
+}
+
+/* ===== INDENT ===== */
+.row.indent {
+  padding-left: 16px;
+}
+
+/* ===== AMOUNT (Rp + Angka) ===== */
+.amount {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  justify-content: end;
+  align-items: center;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.amount .rp {
+  text-align: left;
+  color: #666;
+}
+
+.amount .value {
+  text-align: right;
+}
+
+/* ===== NILAI NEGATIF ===== */
+.row.muted {
+  color: #777;
+}
+
+/* ===== TOTAL ===== */
+.row.total {
+  margin-top: 4px;
+  padding-top: 6px;
+  border-top: 1px solid #e0e0e0;
+  font-weight: 600;
+}
+
+/* ===== FINAL TOTAL ===== */
+.row.final {
+  margin-top: 14px;
+  padding: 10px 0;
+  border-top: 2px solid #333;
+  font-weight: 700;
+  font-size: 15px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
+  .laporan-grid {
+    grid-template-columns: 1fr;
+    row-gap: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .laporan-block {
+    padding: 16px;
+  }
+}

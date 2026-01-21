@@ -1,0 +1,197 @@
+.laporan-page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+}
+
+/* ===== HEADER ===== */
+.laporan-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.laporan-header .subtitle {
+  font-size: 13px;
+  color: #666;
+}
+
+.periode-control {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* ===== TABS ===== */
+.laporan-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+.laporan-tabs button {
+  background: none;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-weight: 500;
+  border-bottom: 2px solid transparent;
+}
+
+.laporan-tabs button.active {
+  border-bottom-color: #333;
+}
+
+/* ===== CONTENT ===== */
+.laporan-content {
+  flex: 1;
+  overflow: auto;
+}
+
+.laporan-block {
+  border: 2px dashed #ccc;
+  border-radius: 12px;
+  padding: 16px;
+  background: #fff;
+}
+
+.laporan-block.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+/* ===== LIST STYLE ===== */
+.laporan-list {
+  margin-top: 12px;
+}
+
+.group-title {
+  margin-top: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+}
+
+.row.indent {
+  padding-left: 16px;
+}
+
+.row.total {
+  background: #f5f5f5;
+  padding: 8px;
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+.row.highlight {
+  background: #f0f0f0;
+  padding: 8px;
+  font-weight: 600;
+  margin-top: 12px;
+}
+
+.row.final {
+  background: #eaeaea;
+  padding: 10px;
+  font-weight: 700;
+  margin-top: 16px;
+}
+
+.muted {
+  color: #777;
+}
+
+/* ===== NARRATIVE ===== */
+.laporan-block.narrative p {
+  margin-bottom: 8px;
+}
+
+.laporan-block.narrative ul {
+  margin-left: 18px;
+}
+
+/* ===============================
+   PERIODE CONTROL
+=============================== */
+.periode-control {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  background: #f9fafb;
+  padding: 12px 16px;
+  border-radius: 10px;
+}
+
+.periode-control > label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  white-space: nowrap;
+}
+
+.periode-control input[type="month"] {
+  appearance: none;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 500;
+  color: #111827;
+  padding: 6px 4px;
+  cursor: pointer;
+}
+
+.periode-control input[type="month"]:focus {
+  outline: none;
+}
+
+/* ===============================
+   PERIODE RANGE
+=============================== */
+.periode-range {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.periode-range > div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.periode-range label {
+  font-size: 12px;
+  color: #6b7280;
+  white-space: nowrap;
+}
+
+.periode-range input[type="date"] {
+  border: none;
+  background: transparent;
+  font-size: 13px;
+  font-weight: 500;
+  color: #111827;
+  padding: 4px 2px;
+  cursor: pointer;
+}
+
+.periode-range input[type="date"]:focus {
+  outline: none;
+}
+
+.periode-range input[type="date"]:disabled {
+  color: #9ca3af;
+  cursor: default;
+}
+
+.periode-control::after {
+  content: "";
+  flex: 1;
+}

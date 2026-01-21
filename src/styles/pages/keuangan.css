@@ -1,0 +1,166 @@
+/* ===== MAIN TABS ===== */
+.keuangan-main-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+.keuangan-main-tabs button {
+  background: none;
+  border: none;
+  padding: 8px 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+
+.keuangan-main-tabs button.active {
+  border-bottom-color: #333;
+}
+
+.keuangan-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 16px;
+}
+
+/* ===== FULL SECTION ===== */
+.keuangan-section.full {
+  flex: 1;
+}
+
+.keuangan-section.top {
+  flex: 0 0 20%;
+}
+
+.keuangan-section.bottom {
+  flex: 1;
+}
+
+.keuangan-card {
+  height: 100%;
+  border: 2px dashed #ccc;
+  border-radius: 12px;
+  padding: 16px;
+  background: #fff;
+}
+
+/* ===== BANK SUMMARY ===== */
+.bank-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.bank-card {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.bank-name {
+  font-size: 13px;
+  color: #666;
+}
+
+.bank-saldo {
+  margin-top: 4px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* ===== LAPORAN ===== */
+.laporan-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.laporan-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.laporan-header .subtitle {
+  font-size: 13px;
+  color: #666;
+}
+
+.periode-control {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.laporan-tabs {
+  display: flex;
+  gap: 8px;
+  border-bottom: 1px solid #eee;
+}
+
+.laporan-tabs button {
+  background: none;
+  border: none;
+  padding: 6px 10px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+
+.laporan-tabs button.active {
+  border-bottom-color: #333;
+}
+
+/* ===== LAPORAN CONTENT ===== */
+.laporan-content {
+  padding-top: 12px;
+}
+
+.row-group-title {
+  margin-top: 12px;
+  font-weight: 600;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+}
+
+.row.indent {
+  padding-left: 16px;
+}
+
+.row.total {
+  background: #f5f5f5;
+  padding: 8px;
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+.row.highlight {
+  background: #eaeaea;
+  padding: 10px;
+  font-weight: 700;
+  margin-top: 12px;
+}
+
+.keuangan-action-bar {
+  display: flex;
+  justify-content: flex-end;
+  margin: 12px 0 20px;
+}
+
+.btn-primary {
+  background: #333;
+  color: #fff;
+  padding: 8px 14px;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background: #111;
+}

@@ -3,13 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  LayoutDashboard,
-  Database,
-  Boxes,
-  Factory,
-  PanelLeft,
-} from "lucide-react";
+import { LayoutDashboard, Database, Boxes, Factory, PanelLeft, BookOpen } from "lucide-react";
 
 import "@/styles/sidebar.css";
 
@@ -64,6 +58,15 @@ export default function AppSidebar({ collapsed, onToggle }) {
           <Factory size={18} />
           <span>Produksi</span>
         </Link>
+		
+		<Link
+		  href="/keuangan"
+		  className={`menu-item ${isActive("/keuangan") ? "active" : ""}`}
+		>
+		  <BookOpen size={18} />
+		  <span>Keuangan</span>
+		</Link>
+
       </nav>
     </aside>
   );
