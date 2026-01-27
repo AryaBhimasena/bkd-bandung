@@ -149,7 +149,6 @@
 .keuangan-action-bar {
   display: flex;
   justify-content: flex-end;
-  margin: 12px 0 20px;
 }
 
 .btn-primary {

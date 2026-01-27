@@ -7,40 +7,43 @@ import "@/styles/pages/neraca.css";
 export default function NeracaView({ periode, formatRupiah }) {
 
   /* ======================================================
-     TEMPLATE AKUN (SECTION TIDAK PERNAH HILANG)
+     TEMPLATE AKUN
   ====================================================== */
-  const template = {
-    asetLancar: [
-      { id_akun: "1110", nama_akun: "Kas", nilai: null },
-      { id_akun: "1120", nama_akun: "Bank", nilai: null },
-      { id_akun: "1130", nama_akun: "Piutang Usaha", nilai: null },
-      { id_akun: "1140", nama_akun: "Persediaan", nilai: null },
-      { id_akun: "1150", nama_akun: "PPh Dibayar Dimuka", nilai: null },
-      { id_akun: "1151", nama_akun: "PPN Masukan", nilai: null },
-    ],
+	const template = {
+	  asetLancar: [
+		{ id_akun: "1110", nama_akun: "Kas", nilai: null },
+		{ id_akun: "1120", nama_akun: "Bank", nilai: null },
+		{ id_akun: "1140", nama_akun: "Persediaan", nilai: null },
+		{ id_akun: "1130", nama_akun: "Piutang Usaha", nilai: null },
 
-    asetTidakLancar: [
-      { id_akun: "1160", nama_akun: "Aset Tetap", nilai: null },
-      {
-        id_akun: "1161",
-        nama_akun: "Akumulasi Penyusutan Aset Tetap",
-        nilai: null,
-      },
-    ],
+		{ id_akun: "1156", nama_akun: "PPh 22 Dibayar Dimuka", nilai: null },
+		{ id_akun: "1151", nama_akun: "PPh 23 Dibayar Dimuka", nilai: null },
+		{ id_akun: "1152", nama_akun: "PPh 25 Dibayar Dimuka", nilai: null },
 
-    liabilitasJangkaPendek: [
-      { id_akun: "2110", nama_akun: "Hutang Usaha", nilai: null },
-      { id_akun: "2120", nama_akun: "Hutang Pajak", nilai: null },
-      { id_akun: "2121", nama_akun: "PPN Keluaran", nilai: null },
-    ],
+		{ id_akun: "1153", nama_akun: "PPN Masukan", nilai: null },
+		{ id_akun: "1154", nama_akun: "PPN Dibayar Dimuka", nilai: null },
+		{ id_akun: "1155", nama_akun: "Instansi", nilai: null },
+	  ],
 
-    ekuitas: [
-      { id_akun: "3110", nama_akun: "Modal Disetor", nilai: null },
-      { id_akun: "3120", nama_akun: "Tambahan Modal Disetor", nilai: null },
-      { id_akun: "3140", nama_akun: "Laba Ditahan", nilai: null },
-      { id_akun: "3130", nama_akun: "Prive / Dividen", nilai: null },
-    ],
-  };
+	  asetTidakLancar: [
+		{ id_akun: "1160", nama_akun: "Aset Tetap", nilai: null },
+		{ id_akun: "1161", nama_akun: "Akumulasi Penyusutan", nilai: null },
+	  ],
+
+	  liabilitasJangkaPendek: [
+		{ id_akun: "2110", nama_akun: "Hutang Usaha", nilai: null },
+		{ id_akun: "2121", nama_akun: "PPN Keluaran", nilai: null },
+		{ id_akun: "2120", nama_akun: "Hutang Pajak", nilai: null },
+	  ],
+
+	  ekuitas: [
+		{ id_akun: "3110", nama_akun: "Modal Disetor", nilai: null },
+		{ id_akun: "3130", nama_akun: "Prive / Dividen", nilai: null },
+		{ id_akun: "3150", nama_akun: "Pajak Penghasilan", nilai: null },
+		{ id_akun: "3160", nama_akun: "Laba (Rugi) Ditahan Sebelumnya", nilai: null },
+		{ id_akun: "3170", nama_akun: "Laba (Rugi) Ditahan Berjalan", nilai: null },
+	  ],
+	};
 
   const [ledgerSummary, setLedgerSummary] = useState(template);
 
@@ -153,7 +156,7 @@ export default function NeracaView({ periode, formatRupiah }) {
             <span>Rp {formatRupiah(total.totalAsetLancar)}</span>
           </div>
 
-          <div className="group-title">Aset Tidak Lancar</div>
+          <div className="group-title">Aset Tetap</div>
           {ledgerSummary.asetTidakLancar.map((row) => (
             <div
               key={row.id_akun}
@@ -177,7 +180,7 @@ export default function NeracaView({ periode, formatRupiah }) {
 
         {/* ================= LIABILITAS & EKUITAS ================= */}
         <div>
-          <div className="group-title">Liabilitas Jangka Pendek</div>
+          <div className="group-title">Liabilitas</div>
           {ledgerSummary.liabilitasJangkaPendek.map((row) => (
             <div key={row.id_akun} className="row indent">
               <span>{row.nama_akun}</span>
