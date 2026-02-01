@@ -2,6 +2,8 @@
 
 import "@/styles/modal-transaksi.css";
 import { useModalTransaksi } from "@/lib/ModalTransaksiHook";
+import COAListModal from "./COAListModal";
+import SelectAccountSection from "./SelectAccountModal";
 
 export default function ModalTransaksi({ open, onClose, onSubmit }) {
   const {
@@ -29,39 +31,6 @@ export default function ModalTransaksi({ open, onClose, onSubmit }) {
 
   if (!open) return null;
 
-  const renderCOARows = () => {
-    if (loadingCOA) {
-      return (
-        <tr>
-          <td colSpan={3} style={{ textAlign: "center" }}>
-            Memuat data COA...
-          </td>
-        </tr>
-      );
-    }
-
-    if (!filteredCOA.length) {
-      return (
-        <tr>
-          <td colSpan={3} style={{ textAlign: "center" }}>
-            Data COA tidak tersedia
-          </td>
-        </tr>
-      );
-    }
-
-    return filteredCOA.map((coa) => (
-      <tr
-        key={coa.id}
-        className={selectedCOA === coa.kode ? "active" : ""}
-      >
-        <td>{coa.kode}</td>
-        <td>{coa.nama}</td>
-        <td>{coa.saldo}</td>
-      </tr>
-    ));
-  };
-
   return (
     <>
       {/* ===== BACKDROP ===== */}
@@ -78,32 +47,13 @@ export default function ModalTransaksi({ open, onClose, onSubmit }) {
 
         <div className="modal-body">
           {/* ===== LEFT : COA LIST ===== */}
-          <aside className="coa-panel">
-            <div className="coa-filter">
-              <select
-                value={filterTipe}
-                onChange={(e) => setFilterTipe(e.target.value)}
-              >
-                <option value="ALL">Semua Akun</option>
-                <option value="Aset">Aset</option>
-                <option value="Kewajiban">Kewajiban</option>
-                <option value="Ekuitas">Ekuitas</option>
-                <option value="Pendapatan">Pendapatan</option>
-                <option value="Beban">Beban</option>
-              </select>
-            </div>
-
-            <table className="coa-table">
-              <thead>
-                <tr>
-                  <th>Kode</th>
-                  <th>Nama Akun</th>
-                  <th>Saldo Normal</th>
-                </tr>
-              </thead>
-              <tbody>{renderCOARows()}</tbody>
-            </table>
-          </aside>
+          <COAListModal
+            filterTipe={filterTipe}
+            setFilterTipe={setFilterTipe}
+            loadingCOA={loadingCOA}
+            filteredCOA={filteredCOA}
+            selectedCOA={selectedCOA}
+          />
 
           {/* ===== RIGHT : FORM ===== */}
           <section className="form-panel">
@@ -160,119 +110,13 @@ export default function ModalTransaksi({ open, onClose, onSubmit }) {
               </select>
             </div>
 
-            {/* ===== TRANSAKSI DARI - KE ===== */}
-            <div className="form-group form-row">
-              <div className="form-col">
-                <label>Transaksi Dari</label>
-                <select
-                  value={form.coaDariId}
-                  disabled={form.tipeTransaksi === "TRANSFER"}
-                  onChange={(e) =>
-                    setForm((p) => ({ ...p, coaDariId: e.target.value }))
-                  }
-                >
-                  <option value="">Pilih Akun</option>
-                  {filteredCOA.map((coa) => (
-                    <option key={coa.id} value={coa.id}>
-                      {coa.kode} — {coa.nama}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="form-col">
-                <label>Transaksi Ke</label>
-                <select
-                  value={form.coaKeId}
-                  disabled={form.tipeTransaksi === "TRANSFER"}
-                  onChange={(e) =>
-                    setForm((p) => ({ ...p, coaKeId: e.target.value }))
-                  }
-                >
-                  <option value="">Pilih Akun</option>
-                  {filteredCOA.map((coa) => (
-                    <option key={coa.id} value={coa.id}>
-                      {coa.kode} — {coa.nama}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            {/* ===== KAS DARI - KE ===== */}
-            <div className="form-group form-row">
-              <div className="form-col">
-                <label>Kas Dari</label>
-					<select
-					  value={form.transferDariIndex ?? ""}
-					  onChange={(e) => {
-						const idx = e.target.value;
-
-						if (idx === "") {
-						  setForm((p) => ({
-							...p,
-							transferDariIndex: "",
-							coaDariId: "",
-							bankDariId: "",
-						  }));
-						  return;
-						}
-
-						const opt = transferAccountOptions[idx];
-
-						setForm((p) => ({
-						  ...p,
-						  transferDariIndex: idx,
-						  coaDariId: opt.coaId,
-						  bankDariId: opt.bankId,
-						}));
-					  }}
-					>
-					  <option value="">Pilih Akun Asal</option>
-					  {transferAccountOptions.map((opt, i) => (
-						<option key={i} value={i}>
-						  {opt.label}
-						</option>
-					  ))}
-					</select>
-              </div>
-
-              <div className="form-col">
-                <label>Kas Ke</label>
-					<select
-					  value={form.transferKeIndex ?? ""}
-					  onChange={(e) => {
-						const idx = e.target.value;
-
-						if (idx === "") {
-						  setForm((p) => ({
-							...p,
-							transferKeIndex: "",
-							coaKeId: "",
-							bankKeId: "",
-						  }));
-						  return;
-						}
-
-						const opt = transferAccountOptions[idx];
-
-						setForm((p) => ({
-						  ...p,
-						  transferKeIndex: idx,
-						  coaKeId: opt.coaId,
-						  bankKeId: opt.bankId,
-						}));
-					  }}
-					>
-					  <option value="">Pilih Akun Tujuan</option>
-					  {transferAccountOptions.map((opt, i) => (
-						<option key={i} value={i}>
-						  {opt.label}
-						</option>
-					  ))}
-					</select>
-              </div>
-            </div>
+			{/* ===== Pilih Akun Transaksi ===== */}
+            <SelectAccountSection
+			  form={form}
+			  filteredCOA={filteredCOA}
+			  transferAccountOptions={transferAccountOptions}
+			  setForm={setForm}
+			/>
 
             {/* ===== NOMINAL ===== */}
             <div className="form-group">

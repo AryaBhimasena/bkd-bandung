@@ -3,102 +3,143 @@
    Path: styles/pages/laba-rugi.css
    Tema: clean, profesional, akuntansi
 ====================================================== */
-
-/* ===== WRAPPER ===== */
-.laporan-block {
-  background: #fff;
-  padding: 20px 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.laporan-block h3 {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.laporan-block .muted {
-  font-size: 13px;
-  color: #777;
-  margin-bottom: 12px;
-}
-
-/* ===== LIST CONTAINER ===== */
-.laporan-list {
-  display: flex;
-  flex-direction: column;
-  font-size: 14px;
-}
-
-/* ===== GROUP TITLE ===== */
-.group-title {
-  margin-top: 16px;
-  margin-bottom: 6px;
-  font-weight: 600;
-  color: #333;
-}
-
-/* ===== ROW BASE ===== */
-.row {
+/* ===== PAGE ===== */
+.laba-rugi-page {
   display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  padding: 6px 0;
+  grid-template-columns: 1fr 2fr;
+  gap: 12px;
+  padding: 16px;
+  background: #f4f6f8;
+  overflow: hidden;
 }
 
-/* hover ringan untuk keterbacaan */
-.row:not(.total):not(.subtotal):not(.final):hover {
+/* ===== LEFT ===== */
+.editor-section {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.editor-section h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.editor-section .periode {
+  color: #666;
+  font-size: 13px;
+  margin-bottom: 16px;
+  margin-top: 8px;
+}
+
+/* ===== TABLE ===== */
+.table {
+  width: 100%;
+}
+
+.thead,
+.trow {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  align-items: center;
+}
+
+.thead {
+  font-weight: 600;
+  border-bottom: 2px solid #ddd;
+  padding: 8px 0;
+  margin-bottom: 6px;
+  text-align: center;
+  background: #f4f6f8;
+}
+
+.trow {
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+.trow span:nth-child(2),
+.trow span:nth-child(3) {
+  text-align: right;
+}
+
+.group {
+  margin-top: 14px;
+  font-weight: 600;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 4px;
+}
+
+.trow.total {
+  font-weight: 600;
+  border-top: 1px solid #ccc;
+  margin-top: 4px;
+  font-size: 14px;
   background: #fafafa;
 }
 
-/* ===== INDENT DETAIL AKUN ===== */
-.row.indent {
-  padding-left: 16px;
-  color: #444;
-}
-
-/* ===== NOMINAL (KANAN, MONO) ===== */
-.row span:last-child {
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-  text-align: right;
-  min-width: 140px; /* kunci alignment */
-}
-
-/* ===== TOTAL PER KELOMPOK ===== */
-.row.total {
-  margin-top: 4px;
-  padding-top: 6px;
-  border-top: 1px solid #e0e0e0;
-  font-weight: 600;
-}
-
-/* ===== SUBTOTAL (LABA KOTOR / LABA USAHA) ===== */
-.row.subtotal {
-  margin-top: 8px;
-  padding: 8px 0;
-  background: #f6f6f6;
-  font-weight: 600;
-}
-
-/* ===== FINAL (LABA BERSIH) ===== */
-.row.final {
-  margin-top: 14px;
-  padding: 10px 0;
-  border-top: 2px solid #333;
+.trow.subtotal {
   font-weight: 700;
-  font-size: 15px;
+  margin-top: 10px;
+  font-size: 14px;
+  background: #fafafa;
 }
 
-/* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
-  .laporan-block {
-    padding: 16px;
-  }
+/* ===== RIGHT ===== */
+.preview-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
 
-  .row span:last-child {
-    min-width: 120px;
-  }
+.preview-header {
+  text-align: right;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
+.preview-header button {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.preview-header button:hover {
+  background: #1e40af;
+}
+
+/* ===== PREVIEW PAPER ===== */
+.preview-paper {
+  width: 80%;
+  background: #fff;
+  padding: 20mm;
+  margin: 0 auto;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+}
+
+.preview-paper h3 {
+  margin: 0;
+  text-align: center;
+}
+
+.preview-paper .periode {
+  text-align: center;
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+.preview-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.preview-row.final {
+  margin-top: 24px;
+  font-weight: 700;
+  font-size: 16px;
 }

@@ -33,46 +33,51 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="login-root">
-      <div className="login-brand">
-        <div className="brand-content">
-          <h1>Bejana Kopi Dunia</h1>
-          <p>Inventory & Production Management System</p>
-        </div>
+    <div className="login-page">
+      {/* Overlay */}
+      <div className="login-overlay" />
+
+      {/* Brand Info */}
+      <div className="login-branding">
+        <h1>PT. Bejana Kopi Dunia</h1>
+        <h2>Bejana Accounting & Operations System</h2>
+        <p>
+          Sistem terintegrasi untuk operasional, persediaan, dan laporan keuangan
+          berbasis standar akuntansi.
+        </p>
       </div>
 
-      <div className="login-form-wrapper">
-        <div className="login-card">
-          <h2>Login</h2>
+      {/* Login Card */}
+      <div className="login-card">
+        <h3>Masuk ke Sistem</h3>
 
-          {error && <div className="login-error">{error}</div>}
+        {error && <div className="login-error">{error}</div>}
 
-          <div className="form-group">
-            <label>Username</label>
-            <input
-              type="text"
-              value={username}
-              onChange={e => setUsername(e.target.value)}
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-            />
-          </div>
-
-          <button
-            className="login-button"
-            onClick={handleLogin}
-            disabled={loading}
-          >
-            {loading ? "Memproses..." : "Masuk ke Sistem"}
-          </button>
+        <div className="form-group">
+          <input
+            type="text"
+            placeholder="Masukkan username"
+            value={username}
+            onChange={e => setUsername(e.target.value)}
+          />
         </div>
+
+        <div className="form-group">
+          <input
+            type="password"
+            placeholder="Masukkan password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+          />
+        </div>
+
+        <button
+          className="login-button"
+          onClick={handleLogin}
+          disabled={loading}
+        >
+          {loading ? "Memproses..." : "Login"}
+        </button>
       </div>
     </div>
   );

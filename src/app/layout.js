@@ -8,7 +8,7 @@ import { useState } from "react";
 export default function RootLayout({ children }) {
   const pathname = usePathname();
   const isLoginPage = pathname === "/";
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
 
 
   return (
