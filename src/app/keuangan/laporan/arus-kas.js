@@ -1,14 +1,93 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { apiPost } from "@/lib/api";
 import "@/styles/pages/arus-kas.css";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
-export default function ArusKasView({ periode, formatRupiah }) {
+/* ================= TABLE ================= */
 
-  /* ======================================================
-     TEMPLATE AKUN (WAJIB SELALU TAMPIL)
-  ====================================================== */
+function ArusKasTable({ arusKas, total, renderNilai }) {
+  const operasiMasuk = arusKas.operasi.filter(
+    (r) => r.id_akun === "4110"
+  );
+  const operasiKeluar = arusKas.operasi.filter(
+    (r) => r.id_akun !== "4110"
+  );
+
+  return (
+    <div className="arus-kas-table">
+
+      <div className="group-title">
+        Arus Kas dari Aktivitas Operasi
+      </div>
+
+      <div className="sub-group-title">Penerimaan Kas</div>
+      {operasiMasuk.map((row) => (
+        <div key={row.id_akun} className="row indent">
+          <span>{row.nama_akun}</span>
+          <span>{renderNilai(row.nilai)}</span>
+        </div>
+      ))}
+
+      <div className="sub-group-title">Pengeluaran Kas</div>
+      {operasiKeluar.map((row) => (
+        <div key={row.id_akun} className="row indent">
+          <span>{row.nama_akun}</span>
+          <span>{renderNilai(row.nilai)}</span>
+        </div>
+      ))}
+
+      <div className="row total">
+        <span>Kas Bersih dari Aktivitas Operasi</span>
+        <span>{renderNilai(total.totalOperasi)}</span>
+      </div>
+
+      <div className="group-title">
+        Arus Kas dari Aktivitas Investasi
+      </div>
+      {arusKas.investasi.map((row) => (
+        <div key={row.id_akun} className="row indent">
+          <span>{row.nama_akun}</span>
+          <span>{renderNilai(row.nilai)}</span>
+        </div>
+      ))}
+
+      <div className="row total">
+        <span>Kas Bersih dari Aktivitas Investasi</span>
+        <span>{renderNilai(total.totalInvestasi)}</span>
+      </div>
+
+      <div className="group-title">
+        Arus Kas dari Aktivitas Pendanaan
+      </div>
+      {arusKas.pendanaan.map((row) => (
+        <div key={row.id_akun} className="row indent">
+          <span>{row.nama_akun}</span>
+          <span>{renderNilai(row.nilai)}</span>
+        </div>
+      ))}
+
+      <div className="row total">
+        <span>Kas Bersih dari Aktivitas Pendanaan</span>
+        <span>{renderNilai(total.totalPendanaan)}</span>
+      </div>
+
+      <div className="row final">
+        <span>Kenaikan (Penurunan) Kas</span>
+        <span>{renderNilai(total.kenaikanKas)}</span>
+      </div>
+    </div>
+  );
+}
+
+/* ================= PAGE ================= */
+
+export default function ArusKasView({ activeMonth, formatRupiah }) {
+
+  const previewRef = useRef(null);
+
 const template = {
   operasi: [
     { id_akun: "4110", nama_akun: "Pendapatan Usaha", nilai: null },
@@ -39,77 +118,61 @@ const template = {
   ],
 };
 
+
   const [arusKas, setArusKas] = useState(template);
 
-  /* ======================================================
-     LOAD & MERGE DATA (POLA SAMA DENGAN LABA RUGI)
-  ====================================================== */
-  useEffect(() => {
-    console.log("[ArusKas] useEffect triggered");
+  /* ===== PERIODE STANDARD (SAMA DENGAN NERACA) ===== */
 
-    if (!periode?.startDate || !periode?.endDate) {
-      console.warn("[ArusKas] Periode belum lengkap", periode);
-      return;
-    }
+  const { startDate, endDate } = useMemo(() => {
+    if (!activeMonth) return {};
+    const [y, m] = activeMonth.split("-").map(Number);
 
-    const payload = {
-      periode_awal: periode.startDate,
-      periode_akhir: periode.endDate,
+    const f = (d) =>
+      `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
+        d.getDate()
+      ).padStart(2, "0")}`;
+
+    return {
+      startDate: f(new Date(y, m - 1, 1)),
+      endDate: f(new Date(y, m, 0)),
     };
+  }, [activeMonth]);
 
-    console.log("[ArusKas] Request payload", payload);
+  const periodeLabel = useMemo(() => {
+    if (!startDate) return "";
+    return new Date(startDate).toLocaleDateString("id-ID", {
+      month: "long",
+      year: "numeric",
+    });
+  }, [startDate]);
 
-    apiPost("laporan.arusKas", payload)
-      .then((res) => {
-        console.log("[ArusKas] Response API", res);
+  /* ===== LOAD ===== */
 
-        if (!res) {
-          console.warn("[ArusKas] Response kosong / null");
-          return;
-        }
+  useEffect(() => {
+    if (!startDate || !endDate) return;
 
-        const merge = (base, data = []) =>
-          base.map((row) => {
-            const found = data.find(
-              (d) => d.id_akun === row.id_akun
-            );
-            return {
-              ...row,
-              nilai: found ? found.nilai : null,
-            };
-          });
+    apiPost("laporan.arusKas", {
+      periode_awal: startDate,
+      periode_akhir: endDate,
+    }).then((res) => {
+      const merge = (base, data = []) =>
+        base.map((r) => {
+          const f = data.find((d) => d.id_akun === r.id_akun);
+          return { ...r, nilai: f ? f.nilai : null };
+        });
 
-        const mergedData = {
-          operasi: merge(template.operasi, res.operasi),
-          investasi: merge(template.investasi, res.investasi),
-          pendanaan: merge(template.pendanaan, res.pendanaan),
-        };
-
-        console.log("[ArusKas] Merged result", mergedData);
-
-        setArusKas(mergedData);
-      })
-      .catch((err) => {
-        console.error("[ArusKas] API error", err);
+      setArusKas({
+        operasi: merge(template.operasi, res?.operasi),
+        investasi: merge(template.investasi, res?.investasi),
+        pendanaan: merge(template.pendanaan, res?.pendanaan),
       });
-  }, [periode.startDate, periode.endDate]);
+    });
+  }, [startDate, endDate]);
 
-  /* ======================================================
-     HELPER RENDER NILAI
-  ====================================================== */
-  const renderNilai = (v) =>
-    v === null || v === undefined
-      ? "-"
-      : v < 0
-      ? `(Rp ${formatRupiah(Math.abs(v))})`
-      : `Rp ${formatRupiah(v)}`;
+  /* ===== TOTAL ===== */
 
-  /* ======================================================
-     TOTAL (HANYA HITUNG NILAI VALID)
-  ====================================================== */
   const total = useMemo(() => {
-    const sum = (arr) =>
-      arr.reduce((a, b) => a + (Number(b.nilai) || 0), 0);
+    const sum = (a) => a.reduce((x, y) => x + (Number(y.nilai) || 0), 0);
 
     const totalOperasi = sum(arusKas.operasi);
     const totalInvestasi = sum(arusKas.investasi);
@@ -119,97 +182,69 @@ const template = {
       totalOperasi,
       totalInvestasi,
       totalPendanaan,
-      kenaikanKas:
-        totalOperasi + totalInvestasi + totalPendanaan,
+      kenaikanKas: totalOperasi + totalInvestasi + totalPendanaan,
     };
   }, [arusKas]);
-  
-const operasiMasuk = arusKas.operasi.filter(
-  (r) => r.id_akun === "4110"
-);
 
-const operasiKeluar = arusKas.operasi.filter(
-  (r) => r.id_akun !== "4110"
-);
+  const renderNilai = (v) =>
+    v == null
+      ? "-"
+      : v < 0
+      ? `(Rp ${formatRupiah(Math.abs(v))})`
+      : `Rp ${formatRupiah(v)}`;
 
-  /* ======================================================
-     RENDER
-  ====================================================== */
+  /* ===== EXPORT ===== */
+
+  async function handleExportPDF() {
+    const canvas = await html2canvas(previewRef.current, { scale: 2 });
+    const img = canvas.toDataURL("image/png");
+
+    const pdf = new jsPDF("p", "mm", "a4");
+    const w = pdf.internal.pageSize.getWidth();
+    const h = (canvas.height * w) / canvas.width;
+
+    pdf.addImage(img, "PNG", 0, 0, w, h);
+    pdf.save(`Arus-Kas-${periodeLabel}.pdf`);
+  }
+
+  /* ===== RENDER ===== */
+
   return (
-    <div className="laporan-block">
-      <h3>Laporan Arus Kas</h3>
-      <p className="muted">
-        Periode {periode.startDate} s.d {periode.endDate}
-      </p>
+    <div className="report-page">
 
-{/* ================= OPERASI ================= */}
-<div className="group-title">
-  Arus Kas dari Aktivitas Operasi
-</div>
-
-{/* --- PENERIMAAN --- */}
-<div className="sub-group-title">
-  Penerimaan Kas
-</div>
-{operasiMasuk.map((row) => (
-  <div key={row.id_akun} className="row indent">
-    <span>{row.nama_akun}</span>
-    <span>{renderNilai(row.nilai)}</span>
-  </div>
-))}
-
-{/* --- PENGELUARAN --- */}
-<div className="sub-group-title">
-  Pengeluaran Kas
-</div>
-{operasiKeluar.map((row) => (
-  <div key={row.id_akun} className="row indent">
-    <span>{row.nama_akun}</span>
-    <span>{renderNilai(row.nilai)}</span>
-  </div>
-))}
-
-<div className="row total">
-  <span>Kas Bersih dari Aktivitas Operasi</span>
-  <span>{renderNilai(total.totalOperasi)}</span>
-</div>
-
-
-      {/* ================= INVESTASI ================= */}
-      <div className="group-title">
-        Arus Kas dari Aktivitas Investasi
-      </div>
-      {arusKas.investasi.map((row) => (
-        <div key={row.id_akun} className="row indent">
-          <span>{row.nama_akun}</span>
-          <span>{renderNilai(row.nilai)}</span>
+      <section className="editor-section">
+        <div className="laporan-header">
+          <h3>Laporan Arus Kas</h3>
+          <p className="muted">{periodeLabel}</p>
         </div>
-      ))}
-      <div className="row total">
-        <span>Kas Bersih dari Aktivitas Investasi</span>
-        <span>{renderNilai(total.totalInvestasi)}</span>
-      </div>
 
-      {/* ================= PENDANAAN ================= */}
-      <div className="group-title">
-        Arus Kas dari Aktivitas Pendanaan
-      </div>
-      {arusKas.pendanaan.map((row) => (
-        <div key={row.id_akun} className="row indent">
-          <span>{row.nama_akun}</span>
-          <span>{renderNilai(row.nilai)}</span>
+        <ArusKasTable
+          arusKas={arusKas}
+          total={total}
+          renderNilai={renderNilai}
+        />
+      </section>
+
+      <section className="preview-section">
+
+        <button className="btn-export" onClick={handleExportPDF}>
+          Export PDF
+        </button>
+
+        <div ref={previewRef} className="preview-paper">
+          <div className="laporan-header">
+            <h3>Laporan Arus Kas</h3>
+            <p className="muted">{periodeLabel}</p>
+          </div>
+
+          <ArusKasTable
+            arusKas={arusKas}
+            total={total}
+            renderNilai={renderNilai}
+          />
         </div>
-      ))}
-      <div className="row total">
-        <span>Kas Bersih dari Aktivitas Pendanaan</span>
-        <span>{renderNilai(total.totalPendanaan)}</span>
-      </div>
 
-      {/* ================= FINAL ================= */}
-      <div className="row final">
-        <span>Kenaikan (Penurunan) Kas</span>
-        <span>{renderNilai(total.kenaikanKas)}</span>
-      </div>
+      </section>
     </div>
   );
 }

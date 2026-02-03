@@ -99,11 +99,10 @@ export default function LabaRugiView({ activeMonth, formatRupiah }) {
       pendapatan: [
         { id_akun: "4114", nama_akun: "Pendapatan Usaha", nilai: null },
       ],
-      hppDetail: [
-        { key: "awal", nama: "Persediaan Awal", nilai: null },
-        { key: "pembelian", nama: "Pembelian", nilai: null },
-        { key: "akhir", nama: "Persediaan Akhir", nilai: null },
-      ],
+		hppDetail: [
+		  { key: "hpp", nama: "Pembelian Persediaan", nilai: null },
+		],
+
       bebanOperasional: [
         { id_akun: "5115", nama_akun: "Biaya Sehubungan dengan Jasa", nilai: null },
         { id_akun: "5116", nama_akun: "Biaya Gaji Karyawan", nilai: null },
@@ -113,12 +112,12 @@ export default function LabaRugiView({ activeMonth, formatRupiah }) {
         { id_akun: "5120", nama_akun: "Biaya Pemasaran", nilai: null },
         { id_akun: "5121", nama_akun: "Biaya Transport", nilai: null },
         { id_akun: "5122", nama_akun: "Biaya Pemeliharaan", nilai: null },
-        { id_akun: "5223", nama_akun: "Biaya Sewa", nilai: null },
-        { id_akun: "5224", nama_akun: "Biaya Administrasi & Umum", nilai: null },
-        { id_akun: "5225", nama_akun: "Biaya Depresiasi", nilai: null },
+        { id_akun: "5123", nama_akun: "Biaya Sewa", nilai: null },
+        { id_akun: "5124", nama_akun: "Biaya Administrasi & Umum", nilai: null },
+        { id_akun: "5125", nama_akun: "Biaya Depresiasi", nilai: null },
       ],
       bebanPajak: [
-        { id_akun: "5230", nama_akun: "Beban Pajak", nilai: null },
+        { id_akun: "5126", nama_akun: "Beban Pajak", nilai: null },
       ],
     }),
     []
@@ -134,10 +133,7 @@ export default function LabaRugiView({ activeMonth, formatRupiah }) {
 
     const totalPendapatan = sum(ledgerSummary.pendapatan);
 
-    const hppAwal = Number(ledgerSummary.hppDetail[0]?.nilai || 0);
-    const hppPembelian = Number(ledgerSummary.hppDetail[1]?.nilai || 0);
-    const hppAkhir = Number(ledgerSummary.hppDetail[2]?.nilai || 0);
-    const totalHpp = hppAwal + hppPembelian - hppAkhir;
+	const totalHpp = sum(ledgerSummary.hppDetail);
 
     const labaKotor = totalPendapatan - totalHpp;
     const totalBebanOperasional = sum(ledgerSummary.bebanOperasional);
@@ -195,32 +191,48 @@ export default function LabaRugiView({ activeMonth, formatRupiah }) {
 	  // reset LANGSUNG sebelum fetch
 	  setLedgerSummary(TEMPLATE);
 
-	  apiPost("laporan.labaRugi", {
-		periode_awal: startDate,
-		periode_akhir: endDate,
-	  }).then((res) => {
-		if (cancelled) return;
+apiPost("laporan.labaRugi", {
+  periode_awal: startDate,
+  periode_akhir: endDate,
+}).then((res) => {
+  if (cancelled) return;
 
-		const merge = (base, data = []) =>
-		  base.map((row) => {
-			const found = data.find((d) => d.id_akun === row.id_akun);
-			return { ...row, nilai: found ? found.nilai : null };
-		  });
+  const merge = (base, data = []) =>
+    base.map((row) => {
+      const found = data.find((d) => d.id_akun === row.id_akun);
+      return { ...row, nilai: found ? found.nilai : null };
+    });
 
-		setLedgerSummary({
-		  pendapatan: merge(TEMPLATE.pendapatan, res?.pendapatan),
-		  hppDetail: [
-			{ key: "awal", nama: "Persediaan Awal", nilai: res?.hppAwal || null },
-			{ key: "pembelian", nama: "Pembelian", nilai: res?.hppPembelian || null },
-			{ key: "akhir", nama: "Persediaan Akhir", nilai: res?.hppAkhir || null },
-		  ],
-		  bebanOperasional: merge(
-			TEMPLATE.bebanOperasional,
-			[...(res?.bebanOperasional || []), ...(res?.bebanNonKas || [])]
-		  ),
-		  bebanPajak: merge(TEMPLATE.bebanPajak, res?.bebanPajak),
-		});
-	  });
+  // 👉 ambil langsung akun HPP (5114) dari beban
+  const hppRow =
+    [...(res?.bebanOperasional || []), ...(res?.bebanNonKas || [])]
+      .find((r) => r.id_akun === "5114");
+
+  const hppNilai = hppRow ? hppRow.nilai : 0;
+
+  // 👉 buang 5114 dari list beban
+  const bebanClean = [...(res?.bebanOperasional || []), ...(res?.bebanNonKas || [])]
+    .filter((r) => r.id_akun !== "5114");
+
+  setLedgerSummary({
+    pendapatan: merge(TEMPLATE.pendapatan, res?.pendapatan),
+
+    hppDetail: [
+      {
+        key: "hpp",
+        nama: "Pembelian Persediaan",
+        nilai: hppNilai,
+      },
+    ],
+
+    bebanOperasional: merge(
+      TEMPLATE.bebanOperasional,
+      bebanClean
+    ),
+
+    bebanPajak: merge(TEMPLATE.bebanPajak, res?.bebanPajak),
+  });
+});
 
 	  return () => {
 		cancelled = true;
@@ -247,7 +259,8 @@ export default function LabaRugiView({ activeMonth, formatRupiah }) {
     <div className="laba-rugi-page">
       {/* LEFT */}
       <section className="editor-section">
-	    <h3>Laporan Laba Rugi - PT. Bejana Kopi Dunia</h3>
+	    <h3>Laporan Laba Rugi</h3>
+		<p className="company-name">PT. Bejana Kopi Dunia</p>
 	    <p className="periode">{periodeLabel}</p>
 
 	    <LabaRugiTable
@@ -264,7 +277,8 @@ export default function LabaRugiView({ activeMonth, formatRupiah }) {
         </div>
 
 		<div ref={previewRef} className="preview-paper">
-		  <h3>Laporan Laba Rugi - PT. Bejana Kopi Dunia</h3>
+		  <h3>Laporan Laba Rugi</h3>
+		  <p className="company-name">PT. Bejana Kopi Dunia</p>
 		  <p className="periode">{periodeLabel}</p>
 		  <br />
 

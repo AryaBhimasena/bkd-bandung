@@ -57,8 +57,21 @@ export default function ModalTransaksi({ open, onClose, onSubmit }) {
 
           {/* ===== RIGHT : FORM ===== */}
           <section className="form-panel">
+		  
+		  {/* ===== TANGGAL TRANSAKSI ===== */}
+		  <div className="form-group form-row">
+			<div className="form-col">
+			  <label>Tanggal Transaksi</label>
+			  <input
+				type="date"
+				name="tanggal"
+				value={form.tanggal}
+				onChange={handleChange}
+			  />
+			</div>
+		  
             {/* ===== LINI USAHA ===== */}
-            <div className="form-group">
+            <div className="form-col">
               <label>Lini Usaha</label>
               <select
                 value={selectedLiniUsaha}
@@ -79,6 +92,7 @@ export default function ModalTransaksi({ open, onClose, onSubmit }) {
                 ))}
               </select>
             </div>
+		  </div>
 
             {/* ===== JENIS TRANSAKSI ===== */}
             <div className="form-group">

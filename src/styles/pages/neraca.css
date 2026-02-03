@@ -1,117 +1,179 @@
 /* ======================================================
-   LAPORAN POSISI KEUANGAN (NERACA)
-   Clean – Profesional – Akuntansi
+   LAPORAN NERACA
+   Layout mengikuti laba rugi:
+   - LEFT memanjang ke bawah
+   - RIGHT balance kiri-kanan hanya di preview
 ====================================================== */
 
-/* ===== WRAPPER ===== */
-.laporan-block {
-  background: #fff;
-  padding: 20px 24px;
-}
-
-/* ===== HEADER ===== */
-.laporan-header {
-  margin-bottom: 16px;
-}
-
-.laporan-header h3 {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 600;
-}
-
-.laporan-header .muted {
-  font-size: 13px;
-  color: #777;
-}
-
-/* ===== GRID 2 KOLOM (ASET | LIABILITAS & EKUITAS) ===== */
-.laporan-grid {
+/* ===== PAGE ===== */
+.report-page {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: 40px;
-  align-items: start;
+  grid-template-columns: 1fr 2fr;
+  gap: 12px;
+  padding: 16px;
+  background: #f4f6f8;
+  overflow: hidden;
 }
 
-/* ===== GROUP TITLE ===== */
-.group-title {
-  margin-top: 16px;
-  margin-bottom: 6px;
+/* ===== LEFT PANEL ===== */
+.report-page .laporan-header {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.report-page .laporan-header h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.report-page .company-name {
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.report-page .laporan-header .muted {
+  color: #666;
+  font-size: 13px;
+  margin-top: 4px;
+}
+
+/* ===== EXPORT ===== */
+.report-page .btn-export {
+  margin-top: 18px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.report-page .btn-export:hover {
+  background: #1e40af;
+}
+
+/* ======================================================
+   TABLE BASE (VERTIKAL DEFAULT = EDITOR)
+====================================================== */
+
+.neraca-table {
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+}
+
+/* ===== GROUP ===== */
+.neraca-table .group-title {
   font-weight: 600;
-  color: #333;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 4px;
+  margin: 14px 0 6px;
 }
 
 /* ===== ROW ===== */
-.row {
-  display: grid;
-  grid-template-columns: 1fr 140px;
-  align-items: center;
-  padding: 6px 0;
-  font-size: 14px;
+.neraca-table .row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 4px;
 }
 
-/* Hover ringan */
-.row:not(.total):not(.final):hover {
-  background: #fafafa;
+.neraca-table .row span:last-child {
+  text-align: right;
 }
 
 /* ===== INDENT ===== */
-.row.indent {
-  padding-left: 16px;
-}
-
-/* ===== AMOUNT (Rp + Angka) ===== */
-.amount {
-  display: grid;
-  grid-template-columns: 24px 1fr;
-  justify-content: end;
-  align-items: center;
-  text-align: right;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-
-.amount .rp {
-  text-align: left;
-  color: #666;
-}
-
-.amount .value {
-  text-align: right;
-}
-
-/* ===== NILAI NEGATIF ===== */
-.row.muted {
-  color: #777;
+.neraca-table .indent {
+  padding-left: 14px;
 }
 
 /* ===== TOTAL ===== */
-.row.total {
-  margin-top: 4px;
-  padding-top: 6px;
-  border-top: 1px solid #e0e0e0;
+.neraca-table .row.total {
   font-weight: 600;
+  border-top: 1px solid #ccc;
+  margin-top: 4px;
+  background: #fafafa;
 }
 
-/* ===== FINAL TOTAL ===== */
-.row.final {
+/* ===== FINAL ===== */
+.neraca-table .row.final {
   margin-top: 14px;
-  padding: 10px 0;
-  border-top: 2px solid #333;
   font-weight: 700;
-  font-size: 15px;
+  font-size: 14px;
+  background: #fafafa;
+  padding: 8px 6px;
 }
 
-/* ===== RESPONSIVE ===== */
-@media (max-width: 1024px) {
-  .laporan-grid {
-    grid-template-columns: 1fr;
-    row-gap: 24px;
-  }
+/* ===== MUTED ===== */
+.neraca-table .muted {
+  color: #777;
 }
 
-@media (max-width: 768px) {
-  .laporan-block {
-    padding: 16px;
-  }
+/* ======================================================
+   RIGHT PREVIEW
+====================================================== */
+
+.report-page .preview-section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ===== PREVIEW PAPER ===== */
+.report-page .preview-paper {
+  width: 80%;
+  background: #fff;
+  padding: 20mm;
+  margin: 0 auto;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+}
+
+.report-page .preview-paper h3 {
+  margin: 0;
+  text-align: center;
+}
+
+.report-page .preview-paper .muted {
+  text-align: center;
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+/* ======================================================
+   BALANCE LAYOUT ONLY INSIDE PREVIEW
+====================================================== */
+
+.report-page .preview-paper .neraca-table {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+/* biar tiap sisi tetap rapi */
+.report-page .preview-paper .neraca-table > div {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ================= BALANCED TOTAL ALIGN ================= */
+
+/* grid khusus preview */
+.report-page .preview-paper .neraca-table {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-rows: auto;
+  column-gap: 24px;
+}
+
+/* tiap sisi tetap stack vertikal */
+.report-page .preview-paper .neraca-table > div {
+  display: flex;
+  flex-direction: column;
+}
+
+/* paksa total sejajar pada row yang sama */
+.report-page .preview-paper .balance-total {
+  margin-top: auto;
 }

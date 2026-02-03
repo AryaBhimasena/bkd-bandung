@@ -3,103 +3,118 @@
    Path: styles/pages/arus-kas.css
    Tema: clean, profesional, akuntansi
 ====================================================== */
+/* ======================================================
+   PAGE LAYOUT
+====================================================== */
 
-/* ===== WRAPPER ===== */
-.laporan-block {
+.report-page {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 12px;
+  padding: 16px;
+  background: #f4f6f8;
+}
+
+/* ===== LEFT ===== */
+
+.editor-section {
   background: #fff;
-  padding: 20px 24px;
+  border-radius: 8px;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+/* ===== RIGHT ===== */
+
+.preview-section {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 12px;
 }
 
-/* ===== JUDUL ===== */
-.laporan-block h3 {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 600;
+.btn-export {
+  align-self: flex-end;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
-.laporan-block .muted {
+.btn-export:hover {
+  background: #1e40af;
+}
+
+/* ===== PREVIEW PAPER ===== */
+
+.preview-paper {
+  width: 80%;
+  margin: 0 auto;
+  background: #fff;
+  padding: 20mm;
+  box-shadow: 0 0 10px rgba(0,0,0,.15);
+}
+
+/* ======================================================
+   TABLE STYLE
+====================================================== */
+
+.arus-kas-table {
   font-size: 13px;
-  color: #777;
-  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
 }
 
-/* ===== GROUP TITLE ===== */
 .group-title {
-  margin-top: 16px;
-  margin-bottom: 6px;
   font-weight: 600;
-  color: #333;
+  margin: 16px 0 6px;
+  border-bottom: 1px solid #ddd;
 }
 
 .sub-group-title {
-  margin-top: 8px;
-  margin-bottom: 4px;
-  font-weight: 600;
+  font-weight: 500;
+  margin: 8px 0 4px;
   color: #444;
-  font-size: 13px;
 }
 
-
-/* ===== ROW BASE ===== */
 .row {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  padding: 6px 0;
-  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 4px;
 }
 
-/* Hover ringan */
-.row:not(.total):not(.final):hover {
+.indent {
+  padding-left: 14px;
+}
+
+.row.total {
+  font-weight: 600;
+  border-top: 1px solid #ccc;
+  margin-top: 6px;
   background: #fafafa;
 }
 
-/* ===== DETAIL AKTIVITAS ===== */
-.row.indent {
-  padding-left: 16px;
-  color: #444;
+.row.final {
+  margin-top: 16px;
+  font-weight: 700;
+  font-size: 14px;
+  background: #fafafa;
+  padding: 8px 6px;
 }
 
-/* ===== NILAI ANGKA ===== */
-.row span:last-child {
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-  text-align: right;
-  min-width: 140px; /* kunci alignment */
-}
-
-/* ===== ARUS KELUAR (NEGATIF) ===== */
-.row.muted {
+.muted {
   color: #777;
 }
 
-/* ===== TOTAL PER AKTIVITAS ===== */
-.row.total {
-  margin-top: 4px;
-  padding-top: 6px;
-  border-top: 1px solid #e0e0e0;
-  font-weight: 600;
+/* ===== HEADER ===== */
+
+.laporan-header h3 {
+  margin: 0;
+  text-align: center;
 }
 
-/* ===== FINAL (KENAIKAN / PENURUNAN KAS) ===== */
-.row.final {
-  margin-top: 14px;
-  padding: 10px 0;
-  border-top: 2px solid #333;
-  font-weight: 700;
-  font-size: 15px;
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
-  .laporan-block {
-    padding: 16px;
-  }
-
-  .row span:last-child {
-    min-width: 120px;
-  }
+.laporan-header .muted {
+  text-align: center;
+  margin-bottom: 18px;
 }

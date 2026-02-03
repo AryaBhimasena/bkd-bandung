@@ -19,11 +19,25 @@ export default function KeuanganRingkasanPage({
     }, 0);
   }, [bankSummary]);
 
-  const totalMasuk = recentTrx
+  /* ================================
+     FILTER TRANSAKSI YANG REAL CASH/BANK
+     - Harus ada bank
+     - Bukan transfer saldo
+  ================================ */
+	const bankCashTrx = useMemo(() => {
+	  return recentTrx.filter(t => 
+		t.bank &&
+		t.bank !== "-" &&
+		t.bank !== "" &&
+		!t.isTransfer
+	  );
+	}, [recentTrx]);
+
+  const totalMasuk = bankCashTrx
     .filter((t) => t.tipe === "IN")
     .reduce((sum, t) => sum + t.amount, 0);
 
-  const totalKeluar = recentTrx
+  const totalKeluar = bankCashTrx
     .filter((t) => t.tipe === "OUT")
     .reduce((sum, t) => sum + t.amount, 0);
 

@@ -30,7 +30,10 @@ export function useModalTransaksi({ open, onSubmit }) {
   const [jenisTransaksiList, setJenisTransaksiList] = useState([]);
 
   /* ================= FORM ================= */
+  const today = new Date().toISOString().slice(0, 10);
+  
   const [form, setForm] = useState({
+	tanggal: today,
     idJenisTransaksi: "",
     tipeTransaksi: "",
     coaId: "",
@@ -93,6 +96,7 @@ export function useModalTransaksi({ open, onSubmit }) {
     setFilterTipe("ALL");
     setBankList([]);
     setForm({
+	  tanggal: today,
       idJenisTransaksi: "",
       tipeTransaksi: "",
       coaId: "",
@@ -130,12 +134,12 @@ export function useModalTransaksi({ open, onSubmit }) {
   }, [loadingBank, selectedLiniUsaha]);
   
 	const akunKas = useMemo(
-	  () => coaList.find((c) => Number(c.id) === 1110),
+	  () => coaList.find((c) => Number(c.id) === 1111),
 	  [coaList]
 	);
 
 	const akunBank = useMemo(
-	  () => coaList.find((c) => Number(c.id) === 1120),
+	  () => coaList.find((c) => Number(c.id) === 1112),
 	  [coaList]
 	);
 	
@@ -213,7 +217,7 @@ const handleTransferKe = (option) => {
 	  }
 
 		onSubmit?.({
-		  tanggal: new Date().toISOString().slice(0, 10),
+		  tanggal: form.tanggal,
 
 		  // === IDENTITAS TRANSAKSI ===
 		  id_jenis_transaksi: form.idJenisTransaksi,

@@ -23,6 +23,8 @@
 .editor-section h3 {
   margin: 0;
   font-size: 18px;
+  width: auto;
+  text-align: center;
 }
 
 .editor-section .periode {
@@ -30,6 +32,17 @@
   font-size: 13px;
   margin-bottom: 16px;
   margin-top: 8px;
+  width: auto;
+  text-align: center;
+}
+
+.company-name {
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  width: auto;
+  text-align: center;
 }
 
 /* ===== TABLE ===== */

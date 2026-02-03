@@ -1,120 +1,196 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { apiPost } from "@/lib/api";
 import "@/styles/pages/neraca.css";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 
-export default function NeracaView({ periode, formatRupiah }) {
+/* ================= TABLE COMPONENT ================= */
 
-  /* ======================================================
-     TEMPLATE AKUN
-  ====================================================== */
-	const template = {
-	  asetLancar: [
-		{ id_akun: "1110", nama_akun: "Kas", nilai: null },
-		{ id_akun: "1120", nama_akun: "Bank", nilai: null },
-		{ id_akun: "1140", nama_akun: "Persediaan", nilai: null },
-		{ id_akun: "1130", nama_akun: "Piutang Usaha", nilai: null },
+function NeracaTable({ data, total, formatRupiah }) {
+  const renderNilai = (v) =>
+    v == null ? "-" : `Rp ${formatRupiah(v)}`;
 
-		{ id_akun: "1156", nama_akun: "PPh 22 Dibayar Dimuka", nilai: null },
-		{ id_akun: "1151", nama_akun: "PPh 23 Dibayar Dimuka", nilai: null },
-		{ id_akun: "1152", nama_akun: "PPh 25 Dibayar Dimuka", nilai: null },
+  const renderSigned = (v) =>
+    v == null
+      ? "-"
+      : v < 0
+      ? `(${formatRupiah(Math.abs(v))})`
+      : `Rp ${formatRupiah(v)}`;
 
-		{ id_akun: "1153", nama_akun: "PPN Masukan", nilai: null },
-		{ id_akun: "1154", nama_akun: "PPN Dibayar Dimuka", nilai: null },
-		{ id_akun: "1155", nama_akun: "Instansi", nilai: null },
-	  ],
+  return (
+    <div className="neraca-table">
 
-	  asetTidakLancar: [
-		{ id_akun: "1160", nama_akun: "Aset Tetap", nilai: null },
-		{ id_akun: "1161", nama_akun: "Akumulasi Penyusutan", nilai: null },
-	  ],
+      <div>
+        <div className="group-title">Aset Lancar</div>
+        {data.asetLancar.map((r) => (
+          <div key={r.id_akun} className="row indent">
+            <span>{r.nama_akun}</span>
+            <span>{renderNilai(r.nilai)}</span>
+          </div>
+        ))}
+        <div className="row total">
+          <span>Total Aset Lancar</span>
+          <span>Rp {formatRupiah(total.totalAsetLancar)}</span>
+        </div>
 
-	  liabilitasJangkaPendek: [
-		{ id_akun: "2110", nama_akun: "Hutang Usaha", nilai: null },
-		{ id_akun: "2121", nama_akun: "PPN Keluaran", nilai: null },
-		{ id_akun: "2120", nama_akun: "Hutang Pajak", nilai: null },
-	  ],
+        <div className="group-title">Aset Tetap</div>
+        {data.asetTidakLancar.map((r) => (
+          <div
+            key={r.id_akun}
+            className={`row indent ${r.nilai < 0 ? "muted" : ""}`}
+          >
+            <span>{r.nama_akun}</span>
+            <span>{renderSigned(r.nilai)}</span>
+          </div>
+        ))}
 
-	  ekuitas: [
-		{ id_akun: "3110", nama_akun: "Modal Disetor", nilai: null },
-		{ id_akun: "3130", nama_akun: "Prive / Dividen", nilai: null },
-		{ id_akun: "3150", nama_akun: "Pajak Penghasilan", nilai: null },
-		{ id_akun: "3160", nama_akun: "Laba (Rugi) Ditahan Sebelumnya", nilai: null },
-		{ id_akun: "3170", nama_akun: "Laba (Rugi) Ditahan Berjalan", nilai: null },
-	  ],
-	};
+        <div className="row final balance-total">
+          <span>Total Aset</span>
+          <span>Rp {formatRupiah(total.totalAset)}</span>
+        </div>
+      </div>
 
-  const [ledgerSummary, setLedgerSummary] = useState(template);
+      <div>
+        <div className="group-title">Liabilitas</div>
+        {data.liabilitasJangkaPendek.map((r) => (
+          <div key={r.id_akun} className="row indent">
+            <span>{r.nama_akun}</span>
+            <span>{renderNilai(r.nilai)}</span>
+          </div>
+        ))}
+        <div className="row total">
+          <span>Total Liabilitas</span>
+          <span>Rp {formatRupiah(total.totalLiabilitas)}</span>
+        </div>
 
-  /* ======================================================
-     LOAD & MERGE DATA NERACA
-  ====================================================== */
-  useEffect(() => {
-    console.log("[Neraca] useEffect triggered");
+        <div className="group-title">Ekuitas</div>
+        {data.ekuitas.map((r) => (
+          <div
+            key={r.id_akun}
+            className={`row indent ${r.nilai < 0 ? "muted" : ""}`}
+          >
+            <span>{r.nama_akun}</span>
+            <span>{renderSigned(r.nilai)}</span>
+          </div>
+        ))}
 
-    if (!periode?.startDate || !periode?.endDate) {
-      console.warn("[Neraca] Periode belum lengkap", periode);
-      return;
-    }
+        <div className="row final balance-total">
+          <span>Total Liabilitas & Ekuitas</span>
+          <span>Rp {formatRupiah(total.totalLiabilitasEkuitas)}</span>
+        </div>
+      </div>
+    </div>
+  );
+}
 
-    const payload = {
-      periode_awal: periode.startDate,
-      periode_akhir: periode.endDate,
+/* ================= PAGE ================= */
+
+export default function NeracaView({ activeMonth, formatRupiah }) {
+
+  const previewRef = useRef(null);
+
+  /* ================= TEMPLATE ================= */
+
+  const TEMPLATE = useMemo(
+    () => ({
+      asetLancar: [
+        { id_akun: "1111", nama_akun: "Kas", nilai: null },
+        { id_akun: "1112", nama_akun: "Bank", nilai: null },
+        { id_akun: "1116", nama_akun: "Persediaan", nilai: null },
+        { id_akun: "1117", nama_akun: "Piutang Usaha", nilai: null },
+        { id_akun: "1119", nama_akun: "PPh 22", nilai: null },
+        { id_akun: "1118", nama_akun: "PPh 23", nilai: null },
+        { id_akun: "1120", nama_akun: "PPh 25", nilai: null },
+        { id_akun: "1121", nama_akun: "PPN Masukan", nilai: null },
+        { id_akun: "1122", nama_akun: "PPN Instansi", nilai: null },
+      ],
+      asetTidakLancar: [
+        { id_akun: "1211", nama_akun: "Aset Tetap", nilai: null },
+        { id_akun: "1212", nama_akun: "Akumulasi Penyusutan", nilai: null },
+      ],
+      liabilitasJangkaPendek: [
+        { id_akun: "2111", nama_akun: "Hutang", nilai: null },
+        { id_akun: "2121", nama_akun: "PPN Keluaran", nilai: null },
+      ],
+      ekuitas: [
+        { id_akun: "3111", nama_akun: "Modal Disetor", nilai: null },
+        { id_akun: "3112", nama_akun: "Prive / Dividen", nilai: null },
+        { id_akun: "3113", nama_akun: "Laba Ditahan", nilai: null },
+      ],
+    }),
+    []
+  );
+
+  const [ledgerSummary, setLedgerSummary] = useState(TEMPLATE);
+
+  /* ================= PERIODE ================= */
+
+  const { startDate, endDate } = useMemo(() => {
+    if (!activeMonth) return {};
+    const [y, m] = activeMonth.split("-").map(Number);
+
+    const f = (d) =>
+      `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
+        d.getDate()
+      ).padStart(2, "0")}`;
+
+    return {
+      startDate: f(new Date(y, m - 1, 1)),
+      endDate: f(new Date(y, m, 0)),
     };
+  }, [activeMonth]);
 
-    console.log("[Neraca] Request payload", payload);
+  const periodeLabel = useMemo(() => {
+    if (!startDate) return "";
+    return new Date(startDate).toLocaleDateString("id-ID", {
+      month: "long",
+      year: "numeric",
+    });
+  }, [startDate]);
 
-    apiPost("laporan.neraca", payload)
-      .then((res) => {
-        console.log("[Neraca] Response API", res);
+  /* ================= LOAD ================= */
 
-        if (!res) {
-          console.warn("[Neraca] Response kosong / null");
-          return;
-        }
+  useEffect(() => {
+    if (!activeMonth) return;
 
-        const merge = (base, data = []) =>
-          base.map((row) => {
-            const found = data.find((d) => d.id_akun === row.id_akun);
-            return {
-              ...row,
-              nilai: found ? found.nilai : null,
-            };
-          });
+    let cancelled = false;
+    setLedgerSummary(TEMPLATE);
 
-        const mergedData = {
-          asetLancar: merge(template.asetLancar, res.asetLancar),
-          asetTidakLancar: merge(
-            template.asetTidakLancar,
-            res.asetTidakLancar
-          ),
-          liabilitasJangkaPendek: merge(
-            template.liabilitasJangkaPendek,
-            res.liabilitasJangkaPendek
-          ),
-          ekuitas: merge(template.ekuitas, res.ekuitas),
-        };
+    apiPost("laporan.neraca", {
+      periode_awal: startDate,
+      periode_akhir: endDate,
+    }).then((res) => {
+      if (cancelled) return;
 
-        console.log("[Neraca] Merged result", mergedData);
+      const merge = (base, data = []) =>
+        base.map((r) => {
+          const f = data.find((d) => d.id_akun === r.id_akun);
+          return { ...r, nilai: f ? f.nilai : null };
+        });
 
-        setLedgerSummary(mergedData);
-      })
-      .catch((err) => {
-        console.error("[Neraca] API error", err);
+      setLedgerSummary({
+        asetLancar: merge(TEMPLATE.asetLancar, res?.asetLancar),
+        asetTidakLancar: merge(TEMPLATE.asetTidakLancar, res?.asetTidakLancar),
+        liabilitasJangkaPendek: merge(
+          TEMPLATE.liabilitasJangkaPendek,
+          res?.liabilitasJangkaPendek
+        ),
+        ekuitas: merge(TEMPLATE.ekuitas, res?.ekuitas),
       });
-  }, [periode.startDate, periode.endDate]);
+    });
 
-  /* ======================================================
-     HITUNG TOTAL
-  ====================================================== */
+    return () => (cancelled = true);
+  }, [activeMonth, startDate, endDate]);
+
+  /* ================= TOTAL ================= */
+
   const total = useMemo(() => {
-    const sum = (arr) =>
-      arr.reduce((a, b) => a + (Number(b.nilai) || 0), 0);
+    const sum = (a) => a.reduce((x, y) => x + (Number(y.nilai) || 0), 0);
 
     const totalAsetLancar = sum(ledgerSummary.asetLancar);
     const totalAsetTidakLancar = sum(ledgerSummary.asetTidakLancar);
-    const totalAset = totalAsetLancar + totalAsetTidakLancar;
 
     const totalLiabilitas = sum(ledgerSummary.liabilitasJangkaPendek);
     const totalEkuitas = sum(ledgerSummary.ekuitas);
@@ -122,99 +198,66 @@ export default function NeracaView({ periode, formatRupiah }) {
     return {
       totalAsetLancar,
       totalAsetTidakLancar,
-      totalAset,
+      totalAset: totalAsetLancar + totalAsetTidakLancar,
       totalLiabilitas,
       totalEkuitas,
       totalLiabilitasEkuitas: totalLiabilitas + totalEkuitas,
     };
   }, [ledgerSummary]);
 
-  /* ======================================================
-     RENDER
-  ====================================================== */
+  /* ================= EXPORT ================= */
+
+  async function handleExportPDF() {
+    const canvas = await html2canvas(previewRef.current, { scale: 2 });
+    const img = canvas.toDataURL("image/png");
+
+    const pdf = new jsPDF("p", "mm", "a4");
+    const w = pdf.internal.pageSize.getWidth();
+    const h = (canvas.height * w) / canvas.width;
+
+    pdf.addImage(img, "PNG", 0, 0, w, h);
+    pdf.save(`Neraca-${periodeLabel}.pdf`);
+  }
+
+  /* ================= RENDER ================= */
+
   return (
-    <div className="laporan-block">
-      <div className="laporan-header">
-        <h3>Laporan Posisi Keuangan</h3>
-        <p className="muted">
-          Per {periode.startDate} s.d {periode.endDate}
-        </p>
-      </div>
+    <div className="report-page">
 
-      <div className="laporan-grid">
-        {/* ================= ASET ================= */}
-        <div>
-          <div className="group-title">Aset Lancar</div>
-          {ledgerSummary.asetLancar.map((row) => (
-            <div key={row.id_akun} className="row indent">
-              <span>{row.nama_akun}</span>
-              <span>{row.nilai == null ? "-" : `Rp ${formatRupiah(row.nilai)}`}</span>
-            </div>
-          ))}
-          <div className="row total">
-            <span>Total Aset Lancar</span>
-            <span>Rp {formatRupiah(total.totalAsetLancar)}</span>
-          </div>
-
-          <div className="group-title">Aset Tetap</div>
-          {ledgerSummary.asetTidakLancar.map((row) => (
-            <div
-              key={row.id_akun}
-              className={`row indent ${row.nilai < 0 ? "muted" : ""}`}
-            >
-              <span>{row.nama_akun}</span>
-              <span>
-                {row.nilai == null
-                  ? "-"
-                  : row.nilai < 0
-                  ? `(${formatRupiah(Math.abs(row.nilai))})`
-                  : `Rp ${formatRupiah(row.nilai)}`}
-              </span>
-            </div>
-          ))}
-          <div className="row final">
-            <span>Total Aset</span>
-            <span>Rp {formatRupiah(total.totalAset)}</span>
-          </div>
+      {/* ===== LEFT ===== */}
+      <section className="editor-section">
+        <div className="laporan-header">
+          <h3>Laporan Posisi Keuangan</h3>
+          <p className="company-name">PT. Bejana Kopi Dunia</p>
+          <p className="muted">{periodeLabel}</p>
         </div>
 
-        {/* ================= LIABILITAS & EKUITAS ================= */}
-        <div>
-          <div className="group-title">Liabilitas</div>
-          {ledgerSummary.liabilitasJangkaPendek.map((row) => (
-            <div key={row.id_akun} className="row indent">
-              <span>{row.nama_akun}</span>
-              <span>{row.nilai == null ? "-" : `Rp ${formatRupiah(row.nilai)}`}</span>
-            </div>
-          ))}
-          <div className="row total">
-            <span>Total Liabilitas</span>
-            <span>Rp {formatRupiah(total.totalLiabilitas)}</span>
+        <NeracaTable
+          data={ledgerSummary}
+          total={total}
+          formatRupiah={formatRupiah}
+        />
+      </section>
+
+      {/* ===== RIGHT ===== */}
+      <section className="preview-section">
+	    <button className="btn-export" onClick={handleExportPDF}>
+          Export PDF
+        </button>
+        <div ref={previewRef} className="preview-paper">
+          <div className="laporan-header">
+            <h3>Laporan Posisi Keuangan</h3>
+			<p className="company-name">PT. Bejana Kopi Dunia</p>
+            <p className="muted">{periodeLabel}</p>
           </div>
 
-          <div className="group-title">Ekuitas</div>
-          {ledgerSummary.ekuitas.map((row) => (
-            <div
-              key={row.id_akun}
-              className={`row indent ${row.nilai < 0 ? "muted" : ""}`}
-            >
-              <span>{row.nama_akun}</span>
-              <span>
-                {row.nilai == null
-                  ? "-"
-                  : row.nilai < 0
-                  ? `(${formatRupiah(Math.abs(row.nilai))})`
-                  : `Rp ${formatRupiah(row.nilai)}`}
-              </span>
-            </div>
-          ))}
-
-          <div className="row final">
-            <span>Total Liabilitas & Ekuitas</span>
-            <span>Rp {formatRupiah(total.totalLiabilitasEkuitas)}</span>
-          </div>
+          <NeracaTable
+            data={ledgerSummary}
+            total={total}
+            formatRupiah={formatRupiah}
+          />
         </div>
-      </div>
+      </section>
     </div>
   );
 }
