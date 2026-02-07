@@ -6,6 +6,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import LabaRugiView from "./laba-rugi";
 import NeracaView from "./neraca";
 import ArusKasView from "./arus-kas";
+import PerubahanModalView from "./perubahan-modal";
 
 import "@/styles/pages/laporan-keuangan.css";
 
@@ -132,6 +133,14 @@ export default function LaporanKeuanganPage({ embedded = false }) {
             formatRupiah={formatRupiah}
           />
         )}
+		
+		{activeTab === "perubahan-modal" && (
+		  <PerubahanModalView
+			activeMonth={activeMonth}
+			formatRupiah={formatRupiah}
+		  />
+		)}
+
       </section>
     </div>
   );

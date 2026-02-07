@@ -21,3 +21,21 @@ export async function apiPost(endpoint, params = {}) {
 
   return res.json();
 }
+
+export async function apiGet(endpoint, params = {}) {
+  const query = new URLSearchParams({
+    path: endpoint,
+    ...params,
+  }).toString();
+
+  let res;
+  try {
+    res = await fetch(`${API_BASE_URL}?${query}`, {
+      method: "GET",
+    });
+  } catch {
+    throw new Error("Tidak dapat terhubung dengan server");
+  }
+
+  return res.json();
+}
