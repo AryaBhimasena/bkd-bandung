@@ -1,0 +1,182 @@
+/* ============================= */
+/* DATA TRANSAKSI PAGE */
+/* ============================= */
+
+.data-transaksi-page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+}
+
+/* ============================= */
+/* TOP BAR */
+/* ============================= */
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+}
+
+.left-search input {
+  width: 360px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  background: #fff;
+}
+
+.left-search input:focus {
+  outline: none;
+  border-color: #333;
+}
+
+.right-filters {
+  display: flex;
+  gap: 16px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+}
+
+.filter-group label {
+  margin-bottom: 4px;
+  color: #666;
+  font-weight: 500;
+}
+
+.filter-group select,
+.filter-group input {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  background: #fff;
+}
+
+.filter-group select:focus,
+.filter-group input:focus {
+  outline: none;
+  border-color: #333;
+}
+
+/* ============================= */
+/* TABLE WRAPPER */
+/* ============================= */
+
+.table-wrapper {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  padding: 8px 0;
+}
+
+/* ============================= */
+/* TABLE */
+/* ============================= */
+
+.table-transaksi {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.table-transaksi thead th {
+  text-align: left;
+  padding: 12px 20px;
+  font-weight: 600;
+  color: #666;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid #eee;
+}
+
+.table-transaksi tbody td {
+  padding: 14px 20px;
+  vertical-align: middle;
+  color: #222;
+}
+
+.table-transaksi tbody tr {
+  border-top: 1px solid #f2f2f2;
+}
+
+.table-transaksi tbody tr:hover {
+  background: #f7f7f7;
+}
+
+/* Alignment helpers */
+
+.text-right {
+  text-align: right;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* ============================= */
+/* DELETE BUTTON */
+/* ============================= */
+
+.btn-delete {
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: #999;
+  padding: 4px;
+  transition: 0.15s ease;
+}
+
+.btn-delete:hover {
+  color: #111;
+  transform: scale(1.05);
+}
+
+/* ============================= */
+/* PAGINATION */
+/* ============================= */
+
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 16px;
+}
+
+.pagination button {
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: #fff;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.15s ease;
+}
+
+.pagination button:hover:not(:disabled) {
+  background: #f5f5f5;
+}
+
+.pagination button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ============================= */
+/* STATES */
+/* ============================= */
+
+.loading-state,
+.empty-state {
+  padding: 40px 16px;
+  text-align: center;
+  color: #777;
+  font-size: 14px;
+}

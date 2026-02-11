@@ -1,0 +1,136 @@
+/* ============================= */
+/* LEDGER PAGE */
+/* ============================= */
+
+.ledger-page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+}
+
+/* ============================= */
+/* TOP BAR */
+/* ============================= */
+
+.ledger-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+}
+
+/* Filter */
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  font-size: 13px;
+}
+
+.filter-group label {
+  margin-bottom: 4px;
+  color: #666;
+  font-weight: 500;
+}
+
+.filter-group select,
+.filter-group input {
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  background: #fff;
+  color: #111;
+}
+
+.filter-group select:focus,
+.filter-group input:focus {
+  outline: none;
+  border-color: #333;
+}
+
+/* ============================= */
+/* TABLE WRAPPER */
+/* ============================= */
+
+.ledger-table-wrapper {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  padding: 8px 0;
+}
+
+/* ============================= */
+/* TABLE */
+/* ============================= */
+
+.ledger-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+/* Header */
+
+.ledger-table thead th {
+  text-align: left;
+  padding: 12px 20px;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: #666;
+  border-bottom: 1px solid #eee;
+}
+
+/* Body */
+
+.ledger-table tbody td {
+  padding: 14px 20px;
+  vertical-align: middle;
+  color: #222;
+}
+
+.ledger-table tbody tr {
+  border-top: 1px solid #f2f2f2;
+}
+
+.ledger-table tbody tr:hover {
+  background: #f7f7f7;
+}
+
+/* Alignment */
+
+.text-right {
+  text-align: right;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* Saldo column emphasis */
+
+.saldo-cell {
+  font-weight: 600;
+  color: #111;
+}
+
+/* Placeholder akun */
+
+.akun-placeholder {
+  color: #888;
+  font-style: italic;
+}
+
+/* ============================= */
+/* STATES */
+/* ============================= */
+
+.loading-state,
+.empty-state {
+  padding: 40px 16px;
+  text-align: center;
+  color: #777;
+  font-size: 14px;
+}

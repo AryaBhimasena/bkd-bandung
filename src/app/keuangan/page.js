@@ -5,42 +5,63 @@ import MainContainer from "@/components/layout/MainContainer";
 import "@/styles/pages/keuangan.css";
 
 import KeuanganRingkasanPage from "./ringkasan/KeuanganRingkasanPage";
-import ModalTransaksi from "@/components/modal/ModalTransaksi";
-import { submitTransaksi } from "@/lib/ModalTransaksiHelper";
+import LaporanKeuanganPage from "./laporan/page";
+import TambahTransaksiPage from "@/app/keuangan/transaksi/tambah-transaksi/page";
+import DataTransaksiPage from "./transaksi/data-transaksi/page";
+import JurnalUmumPage from "./transaksi/jurnal/page";
+import LedgerPage from "./transaksi/ledger/page";
+
 import { apiPost } from "@/lib/api";
 
-import LaporanKeuanganPage from "./laporan/page";
+function TransaksiPlaceholder({ title }) {
+  return (
+    <div className="transaksi-placeholder">
+      <h3>{title}</h3>
+      <p className="muted">
+        Halaman ini belum diimplementasikan.
+        <br />
+        Silakan lanjutkan development modul ini.
+      </p>
+    </div>
+  );
+}
 
 export default function KeuanganPage() {
-  /* ================= STATE ================= */
+  /* ================= MAIN TAB ================= */
   const [activeMainTab, setActiveMainTab] = useState("ringkasan");
 
+  /* ================= SUB TAB TRANSAKSI ================= */
+  const [activeTransaksiTab, setActiveTransaksiTab] = useState("tambah");
+	const TRANSAKSI_TABS = {
+	  tambah: {
+		label: "Tambah Transaksi",
+		component: () => <TambahTransaksiPage embedded />,
+	  },
+		data: {
+		  label: "Data Transaksi",
+		  component: () => <DataTransaksiPage embedded />,
+		},
+		jurnal: {
+		  label: "Jurnal",
+		  component: () => <JurnalUmumPage embedded />,
+		},
+		ledger: {
+		  label: "Ledger",
+		  component: () => <LedgerPage embedded />,
+		},
+	};
+
+  /* ================= DATA ================= */
   const [bankSummary, setBankSummary] = useState([]);
   const [recentTrx, setRecentTrx] = useState([]);
   const [loading, setLoading] = useState(false);
-
-  const [openModal, setOpenModal] = useState(false);
-
-  /* ================= SUBMIT ================= */
-  const handleSubmitTransaksi = async (payload) => {
-    try {
-      await submitTransaksi(payload);
-      alert("Transaksi berhasil disimpan");
-      setOpenModal(false);
-      loadKeuanganData();
-    } catch (err) {
-      alert(err.message);
-    }
-  };
 
   /* ================= FETCHER ================= */
   async function loadKeuanganData() {
     setLoading(true);
     try {
       const bankRes = await apiPost("masterBank.list");
-      if (!bankRes.success) {
-        throw new Error(bankRes.message);
-      }
+      if (!bankRes.success) throw new Error(bankRes.message);
 
       setBankSummary(
         bankRes.data.map((item) => ({
@@ -53,9 +74,7 @@ export default function KeuanganPage() {
       );
 
       const trxRes = await apiPost("keuangan.transaksiRingkasan");
-      if (!trxRes.success) {
-        throw new Error(trxRes.message);
-      }
+      if (!trxRes.success) throw new Error(trxRes.message);
 
       setRecentTrx(
         trxRes.data.map((trx) => ({
@@ -68,7 +87,7 @@ export default function KeuanganPage() {
         }))
       );
     } catch (err) {
-      alert(err.message);
+      alert(err.message || "Gagal memuat data keuangan");
     } finally {
       setLoading(false);
     }
@@ -88,7 +107,7 @@ export default function KeuanganPage() {
     <MainContainer title="Keuangan">
       <div className="keuangan-page">
 
-        {/* TAB UTAMA */}
+        {/* ================= MAIN TAB ================= */}
         <nav className="keuangan-main-tabs">
           <button
             className={activeMainTab === "ringkasan" ? "active" : ""}
@@ -96,6 +115,14 @@ export default function KeuanganPage() {
           >
             Ringkasan
           </button>
+
+          <button
+            className={activeMainTab === "transaksi" ? "active" : ""}
+            onClick={() => setActiveMainTab("transaksi")}
+          >
+            Transaksi
+          </button>
+
           <button
             className={activeMainTab === "laporan" ? "active" : ""}
             onClick={() => setActiveMainTab("laporan")}
@@ -104,17 +131,7 @@ export default function KeuanganPage() {
           </button>
         </nav>
 
-        {/* ACTION */}
-        <div className="keuangan-action-bar">
-          <button
-            className="btn-primary"
-            onClick={() => setOpenModal(true)}
-          >
-            + Tambah Transaksi
-          </button>
-        </div>
-
-        {/* RINGKASAN */}
+        {/* ================= RINGKASAN ================= */}
         {activeMainTab === "ringkasan" && (
           <KeuanganRingkasanPage
             bankSummary={bankSummary}
@@ -124,19 +141,36 @@ export default function KeuanganPage() {
           />
         )}
 
-        {/* LAPORAN */}
+        {/* ================= TRANSAKSI ================= */}
+        {activeMainTab === "transaksi" && (
+          <section className="keuangan-section full">
+
+            {/* SUB TAB TRANSAKSI */}
+			<nav className="keuangan-sub-tabs">
+			  {Object.entries(TRANSAKSI_TABS).map(([key, tab]) => (
+				<button
+				  key={key}
+				  className={activeTransaksiTab === key ? "active" : ""}
+				  onClick={() => setActiveTransaksiTab(key)}
+				>
+				  {tab.label}
+				</button>
+			  ))}
+			</nav>
+            {/* SUB PAGE */}
+			<div className="keuangan-sub-content">
+			  {TRANSAKSI_TABS[activeTransaksiTab]?.component()}
+			</div>
+          </section>
+        )}
+
+        {/* ================= LAPORAN ================= */}
         {activeMainTab === "laporan" && (
           <section className="keuangan-section full">
             <LaporanKeuanganPage embedded />
           </section>
         )}
       </div>
-
-      <ModalTransaksi
-        open={openModal}
-        onClose={() => setOpenModal(false)}
-        onSubmit={handleSubmitTransaksi}
-      />
     </MainContainer>
   );
 }

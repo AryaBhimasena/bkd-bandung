@@ -32,6 +32,7 @@ export async function apiGet(endpoint, params = {}) {
   try {
     res = await fetch(`${API_BASE_URL}?${query}`, {
       method: "GET",
+	  cache: "no-store",
     });
   } catch {
     throw new Error("Tidak dapat terhubung dengan server");

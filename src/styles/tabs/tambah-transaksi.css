@@ -1,0 +1,403 @@
+/* ======================================================
+   ROOT LAYOUT
+====================================================== */
+.transaksi-layout {
+  display: grid;
+  grid-template-columns: 40% 60%;
+  gap: 20px;
+  width: 100%;
+  align-items: flex-start;
+}
+
+/* ======================================================
+   CARD BASE
+====================================================== */
+.card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 16px 18px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.card h3,
+.card h4 {
+  margin: 0 0 12px;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* ======================================================
+   FORM (LEFT SIDE)
+====================================================== */
+.transaksi-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ======================================================
+   LEFT CARD — STRUCTURE IMPROVEMENT
+====================================================== */
+
+.transaksi-form h3 {
+  font-size: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 6px;
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+  background: #f9fafb;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #374151;
+}
+
+.form-group input,
+.form-group select {
+  height: 38px;
+  line-height: 38px;
+  padding: 0 10px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  box-sizing: border-box;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.form-group input[type="text"] {
+  background: #ffffff;
+}
+
+.form-group input::placeholder {
+  color: #9ca3af;
+  font-size: 13px;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #2563eb;
+}
+
+/* specific sizing */
+.form-date {
+  width: 160px;
+  flex-shrink: 0;
+}
+
+.form-jenis {
+  flex: 1;
+}
+
+/* ======================================================
+   JURNAL TABLE (MANUAL)
+====================================================== */
+.tambah-jurnal-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.tambah-jurnal-table th {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #6b7280;
+  font-weight: 600;
+  text-align: left;
+  padding-bottom: 6px;
+}
+
+.tambah-jurnal-table td {
+  padding: 4px;
+  overflow: hidden;
+  vertical-align: middle;
+}
+
+.tambah-jurnal-table input[type="number"],
+.tambah-jurnal-table input.nominal {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.tambah-jurnal-table input,
+.tambah-jurnal-table select {
+  width: 100%;
+  max-width: 100%;
+  height: 36px;
+  padding: 0 8px;
+  box-sizing: border-box;
+}
+
+.tambah-jurnal-table input:focus,
+.tambah-jurnal-table select:focus {
+  border-color: #2563eb;
+}
+
+/* fixed column width */
+.tambah-col-akun {
+  width: 50%;
+}
+
+.tambah-col-debit,
+.tambah-col-kredit {
+  width: 30%;
+}
+
+.tambah-col-action {
+  width: 36px;
+}
+
+.tambah-cell-action {
+  text-align: center;
+}
+
+/* delete row button */
+.tambah-btn-icon {
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  color: #ef4444;
+  cursor: pointer;
+}
+
+/* ======================================================
+   PAIR TRANSACTION GRID
+====================================================== */
+.jurnal-table,
+.pair-grid {
+  margin-top: 8px;
+  padding: 12px;
+  background: #f9fafb;
+  border-radius: 8px;
+  border: 1px dashed #d1d5db;
+}
+
+.pair-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.pair-grid input,
+.pair-grid select {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.pair-grid .full,
+.pair-grid .form-group:last-child {
+  grid-column: span 2;
+}
+
+/* ======================================================
+   BUTTONS
+====================================================== */
+.btn-primary {
+  margin-top: 12px;
+  height: 40px;
+  width: 100%;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.btn-secondary {
+  margin-top: 8px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px dashed #c7cdd6;
+  background: #f3f4f6;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  color: #374151;
+}
+
+/* ======================================================
+   PREVIEW (RIGHT SIDE)
+====================================================== */
+.transaksi-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.preview-card {
+  min-height: 160px;
+  display: flex;
+  flex-direction: column;
+}
+
+.preview-card h4 {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e5e7eb;
+  color: #111827;
+}
+
+/* ======================================================
+   PREVIEW TABLE
+====================================================== */
+.preview-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.preview-table th {
+  text-align: left;
+  font-weight: 600;
+  padding: 6px 4px;
+  border-bottom: 1px solid #e5e7eb;
+  color: #374151;
+}
+
+.preview-table td {
+  padding: 8px 4px;
+  border-bottom: 1px dashed #e5e7eb;
+}
+
+.preview-table .placeholder td {
+  text-align: center;
+  font-style: italic;
+  color: #9ca3af;
+}
+
+/* ======================================================
+   RESPONSIVE
+====================================================== */
+@media (max-width: 1024px) {
+  .transaksi-layout {
+    grid-template-columns: 1fr;
+  }
+}
+/* Overlay */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Card */
+.modal-card {
+  width: 320px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 32px 28px;
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+  animation: scaleIn 0.2s ease-out;
+}
+
+/* Icon circle */
+.modal-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Status colors */
+.modal-card.loading .modal-icon {
+  background: #e0f2fe;
+  color: #0284c7;
+}
+
+.modal-card.success .modal-icon {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.modal-card.error .modal-icon {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* Title */
+.modal-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+/* Message */
+.modal-message {
+  font-size: 14px;
+  color: #475569;
+  margin-bottom: 20px;
+}
+
+/* Button */
+.modal-button {
+  padding: 10px 18px;
+  background: #1e293b;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.modal-button:hover {
+  background: #0f172a;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0 }
+  to { opacity: 1 }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
