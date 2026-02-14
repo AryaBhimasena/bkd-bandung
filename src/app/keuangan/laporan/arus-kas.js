@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { apiPost } from "@/lib/api";
+import { apiGet } from "@/lib/api";
 import "@/styles/pages/arus-kas.css";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
@@ -30,8 +30,6 @@ function Group({ title, rows, totalLabel, totalValue, renderNilai }) {
 function ArusKasTable({ data, renderNilai }) {
   return (
     <div className="arus-kas-table">
-
-      {/* ===== OPERASI ===== */}
       <Group
         title="Arus Kas dari Aktivitas Operasi"
         rows={data.operasi}
@@ -40,7 +38,6 @@ function ArusKasTable({ data, renderNilai }) {
         renderNilai={renderNilai}
       />
 
-      {/* ===== INVESTASI ===== */}
       <Group
         title="Arus Kas dari Aktivitas Investasi"
         rows={data.investasi}
@@ -49,7 +46,6 @@ function ArusKasTable({ data, renderNilai }) {
         renderNilai={renderNilai}
       />
 
-      {/* ===== PENDANAAN ===== */}
       <Group
         title="Arus Kas dari Aktivitas Pendanaan"
         rows={data.pendanaan}
@@ -58,7 +54,6 @@ function ArusKasTable({ data, renderNilai }) {
         renderNilai={renderNilai}
       />
 
-      {/* ===== TOTAL AKHIR ===== */}
       <div className="row final">
         <span>Kenaikan (Penurunan) Kas Bersih</span>
         <span>
@@ -69,7 +64,6 @@ function ArusKasTable({ data, renderNilai }) {
           )}
         </span>
       </div>
-
     </div>
   );
 }
@@ -78,7 +72,6 @@ function ArusKasTable({ data, renderNilai }) {
 
 export default function ArusKasView({ activeMonth, formatRupiah }) {
   const previewRef = useRef(null);
-
   const [data, setData] = useState(null);
 
   /* ================= PERIODE ================= */
@@ -108,19 +101,19 @@ export default function ArusKasView({ activeMonth, formatRupiah }) {
 
   /* ================= LOAD DATA ================= */
 
-useEffect(() => {
-  if (!startDate || !endDate) return;
+  useEffect(() => {
+    if (!startDate || !endDate) return;
 
-  setData(null);
+    setData(null);
 
-  apiPost("laporan.arusKas", {
-    periode_awal: startDate,
-    periode_akhir: endDate
-  }).then(res => {
-    setData(res);
-  });
+    apiGet("laporan.arusKas", {
+      periode_awal: startDate,
+      periode_akhir: endDate
+    }).then(res => {
+      setData(res); // backend sudah lengkap
+    });
 
-}, [startDate, endDate]);
+  }, [startDate, endDate]);
 
   /* ================= FORMAT ================= */
 
@@ -133,17 +126,55 @@ useEffect(() => {
 
   /* ================= EXPORT ================= */
 
-  async function handleExportPDF() {
-    const canvas = await html2canvas(previewRef.current, { scale: 2 });
-    const img = canvas.toDataURL("image/png");
+async function handleExportPDF() {
+  const canvas = await html2canvas(previewRef.current, {
+    scale: 1.2, // cukup 1.2 agar tetap tajam & ringan
+    backgroundColor: "#ffffff",
+    useCORS: true,
+    logging: false,
+  });
 
-    const pdf = new jsPDF("p", "mm", "a4");
-    const w = pdf.internal.pageSize.getWidth();
-    const h = (canvas.height * w) / canvas.width;
+  const img = canvas.toDataURL("image/jpeg", 0.8);
 
-    pdf.addImage(img, "PNG", 0, 0, w, h);
-    pdf.save(`Arus-Kas-${periodeLabel}.pdf`);
-  }
+  const pdf = new jsPDF({
+    orientation: "p",
+    unit: "mm",
+    format: "a4",
+    compress: true,
+  });
+
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
+
+  const imgWidth = canvas.width;
+  const imgHeight = canvas.height;
+
+  // Hitung scale agar muat dalam 1 halaman
+  const ratio = Math.min(
+    pageWidth / imgWidth,
+    pageHeight / imgHeight
+  );
+
+  const finalWidth = imgWidth * ratio;
+  const finalHeight = imgHeight * ratio;
+
+  // Center di halaman
+  const x = (pageWidth - finalWidth) / 2;
+  const y = (pageHeight - finalHeight) / 2;
+
+  pdf.addImage(
+    img,
+    "JPEG",
+    x,
+    y,
+    finalWidth,
+    finalHeight,
+    undefined,
+    "FAST"
+  );
+
+  pdf.save(`Arus-Kas-${periodeLabel}.pdf`);
+}
 
   if (!data) return null;
 
@@ -175,6 +206,7 @@ useEffect(() => {
           <ArusKasTable data={data} renderNilai={renderNilai} />
         </div>
       </section>
+
     </div>
   );
 }

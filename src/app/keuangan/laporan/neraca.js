@@ -166,17 +166,57 @@ export default function NeracaView({ activeMonth, formatRupiah }) {
 
   /* ================= EXPORT ================= */
 
-  async function handleExportPDF() {
-    const canvas = await html2canvas(previewRef.current, { scale: 2 });
-    const img = canvas.toDataURL("image/png");
+async function handleExportPDF() {
+  if (!previewRef.current) return;
 
-    const pdf = new jsPDF("p", "mm", "a4");
-    const w = pdf.internal.pageSize.getWidth();
-    const h = (canvas.height * w) / canvas.width;
+  const canvas = await html2canvas(previewRef.current, {
+    scale: 1.2,                 // ⬅️ turunkan dari 2
+    backgroundColor: "#ffffff",
+    useCORS: true,
+    logging: false,
+  });
 
-    pdf.addImage(img, "PNG", 0, 0, w, h);
-    pdf.save(`Neraca-${periodeLabel}.pdf`);
-  }
+  const img = canvas.toDataURL("image/jpeg", 0.8); // ⬅️ JPEG lebih ringan
+
+  const pdf = new jsPDF({
+    orientation: "p",
+    unit: "mm",
+    format: "a4",
+    compress: true,
+  });
+
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
+
+  const imgWidth = canvas.width;
+  const imgHeight = canvas.height;
+
+  // Hitung rasio supaya muat 1 halaman
+  const ratio = Math.min(
+    pageWidth / imgWidth,
+    pageHeight / imgHeight
+  );
+
+  const finalWidth = imgWidth * ratio;
+  const finalHeight = imgHeight * ratio;
+
+  // Center
+  const x = (pageWidth - finalWidth) / 2;
+  const y = (pageHeight - finalHeight) / 2;
+
+  pdf.addImage(
+    img,
+    "JPEG",
+    x,
+    y,
+    finalWidth,
+    finalHeight,
+    undefined,
+    "FAST"
+  );
+
+  pdf.save(`Neraca-${periodeLabel}.pdf`);
+}
 
   /* ================= RENDER ================= */
 

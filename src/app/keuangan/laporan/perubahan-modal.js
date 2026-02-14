@@ -95,22 +95,17 @@ export default function PerubahanModalView({ activeMonth, formatRupiah }) {
           return;
         }
 
-        // ubah nilai tunggal jadi array 12 bulan
-        const perubahanModalArr = res.data.perubahan_modal.map(item => ({
-          akun: item.akun,
-          nilai: Array(12).fill(item.nilai),
-        }));
+        
+		const perubahanModalArr = res.data.perubahan_modal;
+		const totalEkuitasArr = res.data.total_ekuitas_akhir;
 
-        const totalEkuitasArr = Array(12).fill(
-          res.data.total_ekuitas_akhir
-        );
+		setData({
+		  perubahan_modal: perubahanModalArr,
+		  total_ekuitas_akhir: totalEkuitasArr,
+		  ringkasan_laba_rugi: res.data.ringkasan_laba_rugi,
+		  periode: res.data.periode,
+		});
 
-        setData({
-          perubahan_modal: perubahanModalArr,
-          total_ekuitas_akhir: totalEkuitasArr,
-          ringkasan_laba_rugi: res.data.ringkasan_laba_rugi,
-          periode: res.data.periode,
-        });
 
       } catch (err) {
         console.error("Error fetch laporan perubahan modal:", err.message);
@@ -138,13 +133,21 @@ async function handleExportPDF() {
   node.classList.add("mode-print");
 
   const canvas = await html2canvas(node, {
-    scale: 2,
+    scale: 1.4,               // TURUN dari 2
     backgroundColor: "#ffffff",
+    useCORS: true,
   });
 
-  const img = canvas.toDataURL("image/png");
+  // JPEG dengan quality
+  const imgData = canvas.toDataURL("image/jpeg", 0.75);
 
-  const pdf = new jsPDF("landscape", "mm", "a4");
+  const pdf = new jsPDF({
+    orientation: "landscape",
+    unit: "mm",
+    format: "a4",
+    compress: true,          // 🔥 penting
+  });
+
   const pdfW = pdf.internal.pageSize.getWidth();
   const pdfH = pdf.internal.pageSize.getHeight();
 
@@ -153,7 +156,17 @@ async function handleExportPDF() {
 
   const y = (pdfH - imgH) / 2;
 
-  pdf.addImage(img, "PNG", 0, y, imgW, imgH);
+  pdf.addImage(
+    imgData,
+    "JPEG",
+    0,
+    y,
+    imgW,
+    imgH,
+    undefined,
+    "FAST"                   // kompresi cepat
+  );
+
   pdf.save(`Perubahan-Modal-${year}.pdf`);
 
   node.classList.remove("mode-print");

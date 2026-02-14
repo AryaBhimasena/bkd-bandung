@@ -76,6 +76,8 @@
 .ringkasan-main {
   display: grid;
   grid-template-columns: 35% 65%;
+  gap: 20px;
+  align-items: start;
 }
 
 /* ===== CARD SECTION ===== */

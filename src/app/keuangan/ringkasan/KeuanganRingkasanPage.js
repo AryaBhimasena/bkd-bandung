@@ -134,8 +134,6 @@ function formatTanggal(value) {
               <thead>
                 <tr>
                   <th>Bank</th>
-                  <th>No. Rekening</th>
-                  <th>Lini Bisnis</th>
                   <th className="text-right">Saldo</th>
                 </tr>
               </thead>
@@ -143,8 +141,6 @@ function formatTanggal(value) {
                 {bankSummary.map((bank, i) => (
                   <tr key={i}>
                     <td>{bank.bank}</td>
-                    <td>{bank.noRekening || "-"}</td>
-                    <td>{bank.liniBisnis || "-"}</td>
                     <td className="amount-cell">
                       <span className="rp">Rp</span>
                       <span className="amount">
@@ -154,82 +150,84 @@ function formatTanggal(value) {
                   </tr>
                 ))}
               </tbody>
-              <tfoot>
-                <tr>
-                  <td colSpan={3}>
-                    <strong>Total Saldo</strong>
-                  </td>
-                  <td className="amount-cell total">
-                    <span className="rp">Rp</span>
-                    <span className="amount">
-                      {formatRupiah(totalSaldo)}
-                    </span>
-                  </td>
-                </tr>
-              </tfoot>
+				<tfoot>
+				  <tr>
+					<td>
+					  <strong>Total Saldo</strong>
+					</td>
+					<td className="amount-cell total">
+					  <span className="rp">Rp</span>
+					  <span className="amount">
+						{formatRupiah(totalSaldo)}
+					  </span>
+					</td>
+				  </tr>
+				</tfoot>
+
             </table>
           )}
         </section>
 
-		{/* ===== AKTIVITAS TERAKHIR ===== */}
-		<section className="ringkasan-section card">
-		  <div className="section-header">
-			<h3>Aktivitas Terakhir</h3>
-		  </div>
+{/* ===== AKTIVITAS TERAKHIR ===== */}
+<section className="ringkasan-section card">
+  <div className="section-header">
+    <h3>Aktivitas Terakhir</h3>
+  </div>
 
-		  {loading ? (
-			<p className="loading-text">Memuat transaksi...</p>
-		  ) : (
-			<table className="ringkasan-table trx-table">
-			  <thead>
-				<tr>
-				  <th>Tanggal</th>
-				  <th>Bank</th>
-				  <th>Lini Bisnis</th>
-				  <th>Keterangan</th>
-				  <th className="text-right">Masuk</th>
-				  <th className="text-right">Keluar</th>
-				</tr>
-			  </thead>
-			  <tbody>
-				{recentTrx.slice(0, 10).map((row, i) => (
-				  <tr key={i}>
-					<td>{formatTanggal(row.tanggal)}</td>
-					<td>{row.bank || "-"}</td>
-					<td>{row.liniBisnis || "-"}</td>
-					<td>{row.keterangan}</td>
+  {loading ? (
+    <p className="loading-text">Memuat transaksi...</p>
+  ) : (
+    <table className="ringkasan-table trx-table">
+      <thead>
+        <tr>
+          <th>Tanggal</th>
+          <th>Akun</th>
+          <th>Keterangan</th>
+          <th className="text-right">Debit</th>
+          <th className="text-right">Kredit</th>
+        </tr>
+      </thead>
+      <tbody>
+        {recentTrx.slice(0, 10).map((row, i) => (
+          <tr key={i}>
+            <td>{formatTanggal(row.tanggal)}</td>
 
-					<td className="trx-amount in">
-					  {row.tipe === "IN" ? (
-						<>
-						  <span className="trx-rp">Rp</span>
-						  <span className="trx-value">
-							{formatRupiah(row.amount)}
-						  </span>
-						</>
-					  ) : (
-						<span className="trx-dash">–</span>
-					  )}
-					</td>
+            {/* tampilkan akun */}
+            <td>{row.akun || "-"}</td>
 
-					<td className="trx-amount out">
-					  {row.tipe === "OUT" ? (
-						<>
-						  <span className="trx-rp">Rp</span>
-						  <span className="trx-value">
-							{formatRupiah(row.amount)}
-						  </span>
-						</>
-					  ) : (
-						<span className="trx-dash">–</span>
-					  )}
-					</td>
-				  </tr>
-				))}
-			  </tbody>
-			</table>
-		  )}
-		</section>
+            <td>{row.keterangan}</td>
+
+            <td className="trx-amount in">
+              {row.tipe === "Debit" ? (
+                <>
+                  <span className="trx-rp">Rp</span>
+                  <span className="trx-value">
+                    {formatRupiah(row.amount)}
+                  </span>
+                </>
+              ) : (
+                <span className="trx-dash">–</span>
+              )}
+            </td>
+
+            <td className="trx-amount out">
+              {row.tipe === "Kredit" ? (
+                <>
+                  <span className="trx-rp">Rp</span>
+                  <span className="trx-value">
+                    {formatRupiah(row.amount)}
+                  </span>
+                </>
+              ) : (
+                <span className="trx-dash">–</span>
+              )}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )}
+</section>
       </div>
     </div>
   );

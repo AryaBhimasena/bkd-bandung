@@ -11,7 +11,7 @@ import DataTransaksiPage from "./transaksi/data-transaksi/page";
 import JurnalUmumPage from "./transaksi/jurnal/page";
 import LedgerPage from "./transaksi/ledger/page";
 
-import { apiPost } from "@/lib/api";
+import { apiGet, apiPost } from "@/lib/api";
 
 function TransaksiPlaceholder({ title }) {
   return (
@@ -56,42 +56,45 @@ export default function KeuanganPage() {
   const [recentTrx, setRecentTrx] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  /* ================= FETCHER ================= */
-  async function loadKeuanganData() {
-    setLoading(true);
-    try {
-      const bankRes = await apiPost("masterBank.list");
-      if (!bankRes.success) throw new Error(bankRes.message);
+async function loadKeuanganData() {
+  setLoading(true);
+  try {
+    /* ================= BANK LIST (dari ledger + COA) ================= */
+    const bankRes = await apiGet("bank.list");
+    if (!bankRes.success) throw new Error(bankRes.message);
 
-      setBankSummary(
-        bankRes.data.map((item) => ({
-          id_bank: item.id_bank,
-          bank: item.nama_bank,
-          noRekening: item.nomor_rekening,
-          liniBisnis: item.nama_lini_usaha,
-          saldo: Number(item.saldo_akhir) || 0,
-        }))
-      );
+    setBankSummary(
+      bankRes.data.map((item) => ({
+        id_bank: item.id_bank,
+        bank: item.bank,          // sudah hasil resolve dari COA
+        noRekening: "-",          // tidak ada lagi di endpoint baru
+        liniBisnis: "-",          // bisa diisi nanti jika sudah ada mapping
+        saldo: Number(item.saldo) || 0,
+      }))
+    );
 
-      const trxRes = await apiPost("keuangan.transaksiRingkasan");
-      if (!trxRes.success) throw new Error(trxRes.message);
+    /* ================= TRANSAKSI RINGKASAN ================= */
+const trxRes = await apiGet("ledger.list");
+if (!trxRes.success) throw new Error(trxRes.message);
 
-      setRecentTrx(
-        trxRes.data.map((trx) => ({
-          tanggal: trx.tanggal,
-          bank: trx.bank,
-          liniBisnis: trx.liniBisnis,
-          keterangan: trx.keterangan,
-          tipe: trx.tipe,
-          amount: Number(trx.amount) || 0,
-        }))
-      );
-    } catch (err) {
-      alert(err.message || "Gagal memuat data keuangan");
-    } finally {
-      setLoading(false);
-    }
+setRecentTrx(
+  trxRes.data.map(row => ({
+    id: row.id_ledger,
+    tanggal: row.tanggal,
+    akun: row.nama_akun,
+    keterangan: row.keterangan,
+    jenis: row.jenis,
+    tipe: row.debit > 0 ? "Debit" : "Kredit",
+    amount: row.debit > 0 ? row.debit : row.kredit
+  }))
+);
+
+  } catch (err) {
+    alert(err.message || "Gagal memuat data keuangan");
+  } finally {
+    setLoading(false);
   }
+}
 
   useEffect(() => {
     loadKeuanganData();
