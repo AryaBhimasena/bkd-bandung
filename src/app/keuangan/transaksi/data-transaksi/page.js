@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
-import { apiGet } from "@/lib/api";
+import { apiGet, apiPost } from "@/lib/api";
 import { Trash2 } from "lucide-react";
 import "@/styles/tabs/data-transaksi.css";
 
@@ -93,10 +93,31 @@ export default function DataTransaksiPage() {
     currentPage * ITEMS_PER_PAGE
   );
 
-  function handleDelete(id) {
-    if (!confirm("Hapus transaksi ini?")) return;
-    alert("Implementasi delete API: " + id);
+async function handleDelete(id_transaksi) {
+  if (!confirm("Yakin ingin menghapus transaksi ini?\nSemua jurnal & ledger terkait juga akan terhapus.")) return;
+
+  try {
+    setLoading(true);
+
+    const res = await apiPost("keuangan.transaksi.delete", {
+      id_transaksi
+    });
+
+    if (!res.success) {
+      throw new Error(res.message || "Gagal menghapus transaksi");
+    }
+
+    alert("Transaksi berhasil dihapus");
+
+    // refresh data
+    await loadData();
+
+  } catch (err) {
+    alert(err.message || "Terjadi kesalahan saat menghapus transaksi");
+  } finally {
+    setLoading(false);
   }
+}
 
   return (
     <div className="data-transaksi-page">

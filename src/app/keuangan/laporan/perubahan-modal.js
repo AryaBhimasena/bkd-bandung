@@ -21,39 +21,41 @@ function PerubahanModalTable({ data, renderNilai }) {
     total_ekuitas_akhir = [],
   } = data;
 
+  const jumlahBulan = total_ekuitas_akhir.length;
+
   return (
-	<table className="pm-table">
-	  <thead>
-		<tr>
-		  <th className="pm-sticky-col">Akun</th>
-		  {bulanLabel.map(b => (
-			<th key={b} className="pm-right">{b}</th>
-		  ))}
-		</tr>
-	  </thead>
+    <table className="pm-table">
+      <thead>
+        <tr>
+          <th className="pm-sticky-col">Akun</th>
+          {bulanLabel.slice(0, jumlahBulan).map(b => (
+            <th key={b} className="pm-right">{b}</th>
+          ))}
+        </tr>
+      </thead>
 
-	  <tbody>
-		{perubahan_modal.map((row, i) => (
-		  <tr key={i}>
-			<td className="pm-sticky-col">{row.akun}</td>
-			{row.nilai.map((v, idx) => (
-			  <td key={idx} className="pm-right">
-				{renderNilai(v)}
-			  </td>
-			))}
-		  </tr>
-		))}
+      <tbody>
+        {perubahan_modal.map((row, i) => (
+          <tr key={i}>
+            <td className="pm-sticky-col">{row.akun}</td>
+            {row.nilai.map((v, idx) => (
+              <td key={idx} className="pm-right">
+                {renderNilai(v)}
+              </td>
+            ))}
+          </tr>
+        ))}
 
-		<tr className="pm-total-row">
-		  <td className="pm-sticky-col">Total Ekuitas Akhir</td>
-		  {total_ekuitas_akhir.map((v, i) => (
-			<td key={i} className="pm-right pm-bold">
-			  {renderNilai(v)}
-			</td>
-		  ))}
-		</tr>
-	  </tbody>
-	</table>
+        <tr className="pm-total-row">
+          <td className="pm-sticky-col">Total Ekuitas Akhir</td>
+          {total_ekuitas_akhir.map((v, i) => (
+            <td key={i} className="pm-right pm-bold">
+              {renderNilai(v)}
+            </td>
+          ))}
+        </tr>
+      </tbody>
+    </table>
   );
 }
 
@@ -95,17 +97,8 @@ export default function PerubahanModalView({ activeMonth, formatRupiah }) {
           return;
         }
 
-        
-		const perubahanModalArr = res.data.perubahan_modal;
-		const totalEkuitasArr = res.data.total_ekuitas_akhir;
-
-		setData({
-		  perubahan_modal: perubahanModalArr,
-		  total_ekuitas_akhir: totalEkuitasArr,
-		  ringkasan_laba_rugi: res.data.ringkasan_laba_rugi,
-		  periode: res.data.periode,
-		});
-
+        // ✅ Endpoint baru langsung dipakai
+        setData(res.data);
 
       } catch (err) {
         console.error("Error fetch laporan perubahan modal:", err.message);
@@ -126,78 +119,78 @@ export default function PerubahanModalView({ activeMonth, formatRupiah }) {
 
   /* ================= EXPORT ================= */
 
-async function handleExportPDF() {
-  const node = previewRef.current;
+  async function handleExportPDF() {
+    const node = previewRef.current;
 
-  node.classList.remove("mode-preview");
-  node.classList.add("mode-print");
+    node.classList.remove("mode-preview");
+    node.classList.add("mode-print");
 
-  const canvas = await html2canvas(node, {
-    scale: 1.4,               // TURUN dari 2
-    backgroundColor: "#ffffff",
-    useCORS: true,
-  });
+    const canvas = await html2canvas(node, {
+      scale: 1.4,
+      backgroundColor: "#ffffff",
+      useCORS: true,
+    });
 
-  // JPEG dengan quality
-  const imgData = canvas.toDataURL("image/jpeg", 0.75);
+    const imgData = canvas.toDataURL("image/jpeg", 0.75);
 
-  const pdf = new jsPDF({
-    orientation: "landscape",
-    unit: "mm",
-    format: "a4",
-    compress: true,          // 🔥 penting
-  });
+    const pdf = new jsPDF({
+      orientation: "landscape",
+      unit: "mm",
+      format: "a4",
+      compress: true,
+    });
 
-  const pdfW = pdf.internal.pageSize.getWidth();
-  const pdfH = pdf.internal.pageSize.getHeight();
+    const pdfW = pdf.internal.pageSize.getWidth();
+    const pdfH = pdf.internal.pageSize.getHeight();
 
-  const imgW = pdfW;
-  const imgH = (canvas.height * imgW) / canvas.width;
+    const imgW = pdfW;
+    const imgH = (canvas.height * imgW) / canvas.width;
 
-  const y = (pdfH - imgH) / 2;
+    const y = (pdfH - imgH) / 2;
 
-  pdf.addImage(
-    imgData,
-    "JPEG",
-    0,
-    y,
-    imgW,
-    imgH,
-    undefined,
-    "FAST"                   // kompresi cepat
-  );
+    pdf.addImage(
+      imgData,
+      "JPEG",
+      0,
+      y,
+      imgW,
+      imgH,
+      undefined,
+      "FAST"
+    );
 
-  pdf.save(`Perubahan-Modal-${year}.pdf`);
+    pdf.save(`Perubahan-Modal-${year}.pdf`);
 
-  node.classList.remove("mode-print");
-  node.classList.add("mode-preview");
-}
+    node.classList.remove("mode-print");
+    node.classList.add("mode-preview");
+  }
 
   /* ================= RENDER ================= */
 
   return (
     <div className="perubahan-modal-page">
 
-		  <button className="pm-btn-export" onClick={handleExportPDF}>
-			Export PDF
-		  </button>
+      <button className="pm-btn-export" onClick={handleExportPDF}>
+        Export PDF
+      </button>
 
-		  <div
-			ref={previewRef}
-			className="pm-preview-paper pm-mode-preview"
-		  >
+      <div
+        ref={previewRef}
+        className="pm-preview-paper pm-mode-preview"
+      >
 
-		<div className="pm-header">
-		  <div className="pm-header-title">LAPORAN PERUBAHAN MODAL</div>
-		  <div className="pm-header-company">PT. Bejana Kopi Dunia</div>
-		  <div className="pm-header-periode">Periode : {periodeLabel}</div>
-		</div>
+        <div className="pm-header">
+          <div className="pm-header-title">LAPORAN PERUBAHAN MODAL</div>
+          <div className="pm-header-company">PT. Bejana Kopi Dunia</div>
+          <div className="pm-header-periode">Periode : {periodeLabel}</div>
+        </div>
 
-		  <PerubahanModalTable
-			data={data}
-			renderNilai={renderNilai}
-		  />
-		</div>
+        <PerubahanModalTable
+          data={data}
+          renderNilai={renderNilai}
+        />
+
+      </div>
 
     </div>
   );
