@@ -35,38 +35,6 @@ export default function AppSidebar({ collapsed, onToggle }) {
           <span>Dashboard</span>
         </Link>
 
-        <Link
-          href="/master-data"
-          className={`menu-item ${isActive("/master-data") ? "active" : ""}`}
-        >
-          <Database size={18} />
-          <span>Master Data</span>
-        </Link>
-
-        <Link
-          href="/stock"
-          className={`menu-item ${isActive("/stock") ? "active" : ""}`}
-        >
-          <Boxes size={18} />
-          <span>Stock</span>
-        </Link>
-
-        <Link
-          href="/produksi"
-          className={`menu-item ${isActive("/produksi") ? "active" : ""}`}
-        >
-          <Factory size={18} />
-          <span>Produksi</span>
-        </Link>
-		
-		<Link
-		  href="/keuangan"
-		  className={`menu-item ${isActive("/keuangan") ? "active" : ""}`}
-		>
-		  <BookOpen size={18} />
-		  <span>Keuangan</span>
-		</Link>
-
       </nav>
     </aside>
   );
