@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 
 import AppHeader from "@/components/layout/AppHeader";
-import AppNavMenu from "@/components/layout/NavMenu";
+import AppSidebar from "@/components/layout/AppSidebar";
 import { clientBootstrap } from "@/lib/clientBootstrap";
 
 function BootstrapProvider({ children }) {
@@ -18,6 +18,7 @@ function BootstrapProvider({ children }) {
 export default function RootLayout({ children }) {
   const pathname = usePathname();
   const isLoginPage = pathname === "/";
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(true);
 
   return (
     <html lang="id">
@@ -28,13 +29,17 @@ export default function RootLayout({ children }) {
           ) : (
             <>
               <AppHeader />
-              <AppNavMenu />
               <div
                 style={{
                   display: "flex",
                   height: "calc(100vh - 56px)",
                 }}
               >
+                <AppSidebar
+                  collapsed={sidebarCollapsed}
+                  onToggle={() => setSidebarCollapsed(v => !v)}
+                />
+
                 {/* PAGE CONTENT */}
                 {children}
               </div>

@@ -1,276 +1,200 @@
+/* ================= BASE ================= */
 .dashboard-page {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  overflow-x: hidden; /* matikan scroll horizontal */
-  font-family: 'Inter', sans-serif;
-  color: #374151;
-  padding: 20px;
-  /* background-color: #f3f4f6; */ /* dihapus sesuai permintaan */
+  padding: 24px;
+  background: #f6f7f9;
+  min-height: 100vh;
+  color: #1f2937;
+  font-family: system-ui, -apple-system, sans-serif;
 }
 
 /* ================= HEADER ================= */
 .dashboard-header {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
 }
 
-.dashboard-header h1 {
-  font-size: 28px;
-  font-weight: 700;
-  color: #111827;
-}
-
-.dashboard-header p {
-  font-size: 14px;
-  color: #6b7280;
-}
-
-/* ================= SECTION ATAS ================= */
-.dashboard-top-section {
+.dashboard-filter {
   display: flex;
-  gap: 20px;
+  gap: 10px;
 }
 
-/* ---------- LEFT ---------- */
-.dashboard-left {
-  flex: 0 0 68%;
-  max-width: 68%;
-}
-
-/* ===== INSIGHT STOCK GRID ===== */
-.stock-insight-grid {
-  display: grid;
-  grid-template-columns: 40% 60%;
-  gap: 16px;
-}
-
-.bahan-utama-card {
-  background: #fff;
-  border-radius: 16px;
-  padding: 20px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
-  display: flex;
-  flex-direction: column;
-}
-
-.bahan-utama-card h3 {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 12px;
-}
-
-.stock-availability,
-.stock-critical {
-  display: flex;
-  flex-direction: column;
-}
-
-/* garis pemisah vertikal antar insight */
-.stock-critical {
-  display: flex;
-  flex-direction: column;
-  border-left: 1px solid #e5e7eb; /* sama dengan bottom line tabel */
-  padding-left: 16px; /* jarak dari garis */
-  padding-right : 8px;
-}
-
-.stock-status {
-  padding: 4px 8px;
-  border-radius: 999px;
-  font-size: 11px;
-  font-weight: 600;
-  text-align: center;
-  display: inline-block;
-}
-
-.stock-status.menipis {
-  background: #fef3c7;
-  color: #92400e;
-}
-
-.stock-status.habis {
-  background: #fee2e2;
-  color: #991b1b;
-}
-
-.pagination {
-  display: flex;
-  justify-content: flex-end;
-  gap: 6px;
-  margin-top: 8px;
-}
-
-.pagination button {
-  font-size: 12px;
-  padding: 4px 10px;
-  border-radius: 6px;
+.dashboard-date {
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 8px;
   border: 1px solid #e5e7eb;
-  background: #fff;
+  background: #ffffff;
+  font-size: 13px;
+  color: #374151;
   cursor: pointer;
 }
 
-.pagination button:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
+.dashboard-date:hover {
+  border-color: #cbd5e1;
 }
 
-.bahan-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.bahan-table th,
-.bahan-table td {
-  padding: 8px 12px;
-  font-size: 14px;
-  text-align: center; /* center body dan header */
-}
-
-.bahan-table th {
+.dashboard-reset {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  cursor: pointer;
   color: #6b7280;
-  font-weight: 500;
-  border-bottom: 1px solid #e5e7eb;
 }
 
-.bahan-table td {
-  border-bottom: 1px solid #f3f4f6;
+.dashboard-reset:hover {
+  background: #f3f4f6;
 }
 
-.bahan-table tr:hover {
-  background-color: #f9fafb;
+/* ================= GRID ================= */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
 }
 
-/* QTY tersedia */
-.qty-available {
-  font-weight: 600;        /* lebih tebal */
-  color: #111827;          /* teks utama */
+/* ================= CARD ================= */
+.dashboard-card {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  padding: 16px 16px 12px;
 }
 
-/* QTY habis */
-.qty-zero {
-  font-weight: 400;        /* normal */
-  color: #9ca3af;          /* abu-abu soft */
-}
-
-/* ---------- RIGHT ---------- */
-.dashboard-right {
-  flex: 0 0 30%;
-  max-width: 30%;
+/* HEADER CARD */
+.dashboard-card-header {
   display: flex;
-}
-
-.bahan-status-card {
-  background: #fff;
-  border-radius: 16px;
-  padding: 20px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.bahan-status-card h4 {
-  font-size: 15px;
-  font-weight: 600;
-  margin-top: 12px;
-  margin-bottom: 8px;
-  border-bottom: 1px solid #e5e7eb;
-  padding-bottom: 4px;
-  color: #111827;
-  text-align: center;
-}
-
-.bahan-status-card ul {
-  list-style: none;
-  padding-left: 12px;
-  margin: 0 0 12px 0;
-}
-
-.bahan-status-card li {
-  font-size: 14px;
-  padding: 4px 0;
-  color: #374151;
-  display: flex;
+  justify-content: space-between;
   align-items: center;
-}
-
-/* bullet point kuning untuk visual */
-.bahan-status-card li::before {
-  content: '';
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: #facc15;
-  margin-right: 8px;
-}
-
-/* ================= SECTION BAWAH ================= */
-.dashboard-bottom-section {
-  background: #fff;
-  border-radius: 16px;
-  padding: 20px;
-  box-shadow: 0 12px 24px rgba(0,0,0,0.06);
-  font-size: 13px;
-}
-
-.dashboard-bottom-section h2 {
-  font-size: 16px;
-  font-weight: 600;
   margin-bottom: 12px;
 }
 
-.dashboard-bottom-section table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.dashboard-bottom-section th,
-.dashboard-bottom-section td {
-  padding: 10px;
-  border-bottom: 1px solid #f1f5f9;
-  text-align: center; /* center body dan header */
+.dashboard-card-header h3 {
   font-size: 14px;
-}
-
-.dashboard-bottom-section thead {
-  background: #f9fafb;
   font-weight: 600;
+  color: #374151;
 }
 
-.dashboard-bottom-section tr:hover {
-  background: #f9fafb;
-}
-
-/* ================= STATUS PRODUKSI ================= */
-.status.draft {
-  background: #fef3c7;
-  color: #92400e;
-  padding: 4px 8px;
-  border-radius: 999px;
-  font-size: 11px;
+.dashboard-card-header span {
+  font-size: 14px;
   font-weight: 600;
+  color: #111827;
 }
 
-.status.posted {
-  background: #dcfce7;
-  color: #166534;
-  padding: 4px 8px;
-  border-radius: 999px;
-  font-size: 11px;
-  font-weight: 600;
+/* ================= CHART ================= */
+.dashboard-chart {
+  position: relative;
+  height: 140px;
+}
+
+/* SVG */
+.dashboard-svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* GRID LINE (optional future) */
+.dashboard-svg line {
+  stroke: #f1f5f9;
+  stroke-width: 1;
+}
+
+/* AREA */
+.dashboard-area {
+  fill: rgba(59, 130, 246, 0.08);
+}
+
+/* LINE */
+.dashboard-line {
+  fill: none;
+  stroke: #3b82f6;
+  stroke-width: 2;
+}
+
+/* DOT */
+.dashboard-dot {
+  fill: #3b82f6;
+  transition: all 0.15s ease;
+}
+
+.dashboard-dot:hover {
+  r: 5;
+}
+
+/* ================= TOOLTIP ================= */
+.dashboard-tooltip {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+
+  background: #111827;
+  color: #fff;
+  font-size: 12px;
+
+  padding: 6px 10px;
+  border-radius: 6px;
+
+  pointer-events: none;
+}
+
+/* ================= EMPTY ================= */
+.dashboard-empty {
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  font-size: 13px;
+}
+
+/* ================= FOOTER ================= */
+.dashboard-card-footer {
+  margin-top: 10px;
+}
+
+/* BUTTON DETAIL */
+.dashboard-card-footer button {
+  font-size: 12px;
+  color: #2563eb;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.dashboard-card-footer button:hover {
+  text-decoration: underline;
+}
+
+/* ================= LIST ================= */
+.dashboard-list {
+  margin-top: 10px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.dashboard-list-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: 13px;
+  border-bottom: 1px solid #f9fafb;
+}
+
+.dashboard-list-item span:first-child {
+  color: #374151;
+}
+
+.dashboard-list-item span:last-child {
+  font-weight: 500;
+  color: #111827;
 }
 
 /* ================= RESPONSIVE ================= */
-@media (max-width: 1024px) {
-  .dashboard-top-section {
-    flex-direction: column;
-  }
-
-  .dashboard-right {
-    flex: unset;
-    margin-top: 16px;
+@media (max-width: 900px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
   }
 }

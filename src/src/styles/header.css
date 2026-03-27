@@ -1,0 +1,110 @@
+/* ======================================================
+   HEADER BASE
+====================================================== */
+.app-header {
+  position: sticky;
+  top: 0;
+  left: 0;
+
+  height: 56px;
+  width: 85%;
+  margin: 0 auto;
+
+  background: #ffffff;
+  border-bottom: 1px solid #e6e6e6;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0 20px;
+  z-index: 200;
+}
+
+/* ======================================================
+   LEFT SECTION
+====================================================== */
+.app-header__left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* APP NAME */
+.app-title {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  color: #2e2e2e;
+}
+
+/* SEPARATOR */
+.separator {
+  font-size: 13px;
+  color: #c0c0c0;
+}
+
+/* USER NAME — MAKE IT MATTER */
+.user-name {
+  font-size: 15px;          /* lebih besar dari sebelumnya */
+  font-weight: 600;         /* tegas → user aktif */
+  letter-spacing: 0.2px;
+  color: #3a3a3a;
+}
+
+/* LOGOUT BUTTON — SUBTLE */
+.logout-btn {
+  margin-left: 2px;
+
+  background: transparent;
+  border: none;
+  padding: 4px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #8a8a8a;
+  cursor: pointer;
+
+  transition:
+    color 0.2s ease,
+    opacity 0.2s ease;
+}
+
+/* icon lebih kecil & elegan */
+.logout-btn svg {
+  width: 15px;
+  height: 15px;
+}
+
+.logout-btn:hover {
+  color: #7a4a2e;
+  opacity: 0.9;
+}
+
+/* ======================================================
+   RIGHT SECTION (DATE TIME)
+====================================================== */
+.app-header__right {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+  color: #5f5f5f;
+  white-space: nowrap;
+}
+
+/* ======================================================
+   RESPONSIVE
+====================================================== */
+@media (max-width: 1024px) {
+  .app-header {
+    width: calc(100% - 32px);
+  }
+}
+
+@media (max-width: 640px) {
+  .app-header__right {
+    display: none;
+  }
+}

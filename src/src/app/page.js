@@ -39,18 +39,12 @@ export default function LoginPage() {
 
       {/* Brand Info */}
       <div className="login-branding">
-		<h1>PT. Bejana Kopi Dunia</h1>
-		<h2>Bejana Accounting System</h2>
-		<p>
-		  Sistem akuntansi terintegrasi untuk pengelolaan keuangan perusahaan secara akurat, real-time, 
-		  dan sesuai standar akuntansi.
-		</p>
-
-		<div className="login-meta">
-		  <span>Version 2.0.0</span>
-		  <span>•</span>
-		  <span>Updated 27 Mar 2026</span>
-		</div>
+        <h1>PT. Bejana Kopi Dunia</h1>
+        <h2>Bejana Accounting & Operations System</h2>
+        <p>
+          Sistem terintegrasi untuk operasional, persediaan, dan laporan keuangan
+          berbasis standar akuntansi.
+        </p>
       </div>
 
       {/* Login Card */}
