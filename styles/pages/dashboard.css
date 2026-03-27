@@ -1,0 +1,200 @@
+/* ================= BASE ================= */
+.dashboard-page {
+  padding: 24px;
+  background: #f6f7f9;
+  min-height: 100vh;
+  color: #1f2937;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* ================= HEADER ================= */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.dashboard-filter {
+  display: flex;
+  gap: 10px;
+}
+
+.dashboard-date {
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  font-size: 13px;
+  color: #374151;
+  cursor: pointer;
+}
+
+.dashboard-date:hover {
+  border-color: #cbd5e1;
+}
+
+.dashboard-reset {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  cursor: pointer;
+  color: #6b7280;
+}
+
+.dashboard-reset:hover {
+  background: #f3f4f6;
+}
+
+/* ================= GRID ================= */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+/* ================= CARD ================= */
+.dashboard-card {
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  padding: 16px 16px 12px;
+}
+
+/* HEADER CARD */
+.dashboard-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.dashboard-card-header h3 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.dashboard-card-header span {
+  font-size: 14px;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* ================= CHART ================= */
+.dashboard-chart {
+  position: relative;
+  height: 140px;
+}
+
+/* SVG */
+.dashboard-svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* GRID LINE (optional future) */
+.dashboard-svg line {
+  stroke: #f1f5f9;
+  stroke-width: 1;
+}
+
+/* AREA */
+.dashboard-area {
+  fill: rgba(59, 130, 246, 0.08);
+}
+
+/* LINE */
+.dashboard-line {
+  fill: none;
+  stroke: #3b82f6;
+  stroke-width: 2;
+}
+
+/* DOT */
+.dashboard-dot {
+  fill: #3b82f6;
+  transition: all 0.15s ease;
+}
+
+.dashboard-dot:hover {
+  r: 5;
+}
+
+/* ================= TOOLTIP ================= */
+.dashboard-tooltip {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+
+  background: #111827;
+  color: #fff;
+  font-size: 12px;
+
+  padding: 6px 10px;
+  border-radius: 6px;
+
+  pointer-events: none;
+}
+
+/* ================= EMPTY ================= */
+.dashboard-empty {
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  font-size: 13px;
+}
+
+/* ================= FOOTER ================= */
+.dashboard-card-footer {
+  margin-top: 10px;
+}
+
+/* BUTTON DETAIL */
+.dashboard-card-footer button {
+  font-size: 12px;
+  color: #2563eb;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.dashboard-card-footer button:hover {
+  text-decoration: underline;
+}
+
+/* ================= LIST ================= */
+.dashboard-list {
+  margin-top: 10px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.dashboard-list-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: 13px;
+  border-bottom: 1px solid #f9fafb;
+}
+
+.dashboard-list-item span:first-child {
+  color: #374151;
+}
+
+.dashboard-list-item span:last-child {
+  font-weight: 500;
+  color: #111827;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 900px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
