@@ -49,7 +49,9 @@ export default function LoginPage() {
 		<div className="login-meta">
 		  <span>Version 2.0.0</span>
 		  <span>•</span>
-		  <span>Updated 27 Mar 2026</span>
+		  <span>Updated 28 Mar 2026</span>
+		  <span>•</span>
+		  <span>Page List of COA</span>
 		</div>
       </div>
 

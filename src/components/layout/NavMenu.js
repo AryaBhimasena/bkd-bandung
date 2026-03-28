@@ -12,15 +12,15 @@ export default function AppNavMenu() {
   const [showPopup, setShowPopup] = useState(false);
 
   const menus = [
-    { label: "Dashboard", path: "/dashboard" },
-    { label: "Transaksi", path: "/dashboard/transaksi" },
-    { label: "Laporan", path: "/dashboard/laporan" },
-    { label: "COA", path: "/dashboard/coa" },
-    { label: "Pengaturan", path: "/dashboard/pengaturan" },
+    { label: "Dashboard", path: "/dashboard", ready: true },
+    { label: "Transaksi", path: "/transaksi", ready: true },
+    { label: "Laporan", path: "/laporan", ready: false },
+    { label: "COA", path: "/listcoa", ready: true },
+    { label: "Pengaturan", path: "/pengaturan", ready: false },
   ];
 
   function handleClick(menu) {
-    if (menu.path === "/dashboard") {
+    if (menu.ready) {
       router.push(menu.path);
     } else {
       setShowPopup(true);
@@ -51,7 +51,10 @@ export default function AppNavMenu() {
 
       {/* ================= POPUP ================= */}
       {showPopup && (
-        <div className="navmenu-popup-overlay" onClick={() => setShowPopup(false)}>
+        <div
+          className="navmenu-popup-overlay"
+          onClick={() => setShowPopup(false)}
+        >
           <div
             className="navmenu-popup"
             onClick={(e) => e.stopPropagation()}

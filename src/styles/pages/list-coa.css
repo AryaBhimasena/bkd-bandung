@@ -1,0 +1,235 @@
+/* ================= PAGE ================= */
+.coa-page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ================= HEADER ================= */
+.coa-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.coa-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.coa-right {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+/* ================= BUTTON ================= */
+.btn-primary {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background: #1d4ed8;
+}
+
+.btn-secondary {
+  background: #e5e7eb;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.btn-outline {
+  border: 1px solid #d1d5db;
+  background: white;
+  padding: 7px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+/* ================= SEARCH ================= */
+.coa-search {
+  border: 1px solid #d1d5db;
+  padding: 7px 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  width: 180px;
+}
+
+/* ================= CARD ================= */
+.coa-card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* ================= TABLE ================= */
+.coa-table {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow-x: auto; /* 🔥 penting kalau layar kecil */
+}
+
+/* ROW */
+.coa-row {
+  display: grid;
+  grid-template-columns: 
+    120px   /* kode */
+    1.3fr   /* nama */
+    110px   /* tipe */
+    100px   /* saldo */
+    1.5fr   /* kelompok */
+    120px   /* arus kas */
+    1.8fr   /* deskripsi (baru) */
+    90px;   /* action */
+
+  padding: 10px 14px;
+  align-items: center;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 13px;
+  gap: 8px; /* 🔥 biar tidak nempel */
+  min-width: 1000px; /* 🔥 cegah rusak di layar kecil */
+}
+
+/* HEADER */
+.coa-row.header {
+  background: #f9fafb;
+  font-weight: 600;
+  color: #6b7280;
+  font-size: 12px;
+}
+
+/* ================= DESKRIPSI ================= */
+.deskripsi {
+  color: #64748b;
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* 🔥 biar tidak melebar */
+}
+
+/* ================= BADGE ================= */
+.badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* TIPE AKUN */
+.badge.tipe.aset {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.badge.tipe.kewajiban {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.badge.tipe.ekuitas {
+  background: #ede9fe;
+  color: #5b21b6;
+}
+
+.badge.tipe.pendapatan {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.badge.tipe.beban {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+/* SALDO */
+.badge.saldo.debit {
+  background: #ecfeff;
+  color: #0891b2;
+}
+
+.badge.saldo.kredit {
+  background: #fce7f3;
+  color: #be185d;
+}
+
+/* ARUS KAS */
+.badge.arus {
+  background: #f1f5f9;
+  color: #334155;
+}
+
+/* KELOMPOK */
+.kelompok {
+  color: #475569;
+  font-size: 12px;
+}
+
+/* HOVER */
+.coa-row:not(.header):hover {
+  background: #f9fafb;
+}
+
+/* TEXT */
+.kode {
+  color: #6b7280;
+  white-space: nowrap;
+}
+
+.nama {
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.tipe {
+  color: #2563eb;
+  font-weight: 500;
+}
+
+/* ACTION */
+.action {
+  display: flex;
+  gap: 6px;
+  justify-content: center;
+}
+
+.icon-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.icon-btn.danger {
+  color: #ef4444;
+}
+
+/* CENTER */
+.center {
+  text-align: center;
+}
+
+/* EMPTY */
+.coa-empty {
+  padding: 20px;
+  text-align: center;
+  color: #9ca3af;
+}
